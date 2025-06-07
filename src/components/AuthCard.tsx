@@ -1,4 +1,7 @@
 import React from "react";
+import { FaRegIdCard } from "react-icons/fa";
+import { MdLogin } from "react-icons/md";
+import "../style/authpage.css"
 
 interface AuthCardProps {
   title: string;
@@ -13,6 +16,18 @@ const AuthCard: React.FC<AuthCardProps> = ({
   hovered,
   setHovered,
 }) => {
+const  getIcon =()=>{
+  if(title=="login"){
+    return(
+      <MdLogin />
+    )
+  }
+  return (
+    <FaRegIdCard />
+
+  )
+}
+
   return (
     <div
       className={`box  relative flex flex-col items-center  justify-center w-[450px] p- rounded-[20px] text-white font-sans transition-all duration-500 ease-in-out transform ${
@@ -22,8 +37,8 @@ const AuthCard: React.FC<AuthCardProps> = ({
       onMouseLeave={() => setHovered(false)}
     >
       <div className=" box-shadow">
-        <h2 className="text-center text-2xl font-medium  relative mt-4 z-20 uppercase  w-full">
-          {title}
+        <h2 className="text-center text-2xl font-medium  relative mt-4 z-20 uppercase primaryText flex gap-2 justify-center items-center  w-full">
+        <span className=" text-[#ff014] title-icon">{getIcon()}</span>  {title}
         </h2>
 
         <div
