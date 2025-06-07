@@ -30,7 +30,7 @@ const  getIcon =()=>{
 
   return (
     <div
-      className={`box  relative flex flex-col items-center  justify-center w-[450px] p- rounded-[20px] text-white font-sans transition-all duration-500 ease-in-out transform ${
+      className={`box   relative flex flex-col items-center  justify-center w-[450px]  p- rounded-[20px] text-white font-sans transition-all duration-500 ease-in-out transform ${
         hovered ? "scale-105" : "scale-95"
       }`}
       onMouseEnter={() => setHovered(true)}
