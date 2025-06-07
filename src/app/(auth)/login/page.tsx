@@ -24,11 +24,11 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-[#1e1e2f]">
+    <div className="flex justify-center items-center min-h-screen bg-[#1e1e2f] ">
       <AuthCard title="login" hovered={hovered} setHovered={setHovered}>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="text-sm w-full space-y-4 p-3 bb "
+          className="text-sm w-full space-y-4 p-3  "
         >
           <div>
             <input

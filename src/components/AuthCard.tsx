@@ -30,22 +30,22 @@ const  getIcon =()=>{
 
   return (
     <div
-      className={`box   relative flex flex-col items-center  justify-center w-[450px]  p- rounded-[20px] text-white font-sans transition-all duration-500 ease-in-out transform ${
-        hovered ? "scale-105" : "scale-95"
+      className={`box   px-6  relative flex flex-col items-center  justify-center w-[450px]  p- rounded-[20px] text-white font-sans transition-all duration-500 ease-in-out transform ${
+        hovered ? "scale-105 py-6 " : "scale-95 py-1"
       }`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div className=" box-shadow">
-        <h2 className="text-center text-2xl font-medium  relative mt-4 z-20 uppercase primaryText flex gap-2 justify-center items-center  w-full">
+      <div className=" w-full">
+        <h2 className="text-center text-xl font-medium  relative top-7 mb-2 z-20 uppercase primaryText flex gap-2 justify-center items-center  w-full">
         <span className=" text-[#ff014] title-icon">{getIcon()}</span>  {title}
         </h2>
 
         <div
-          className={`form relative transition-all duration-1000 ease-in-out overflow-hidden   ${
+          className={`form relative transition-all duration-1000 ease-in-out overflow-hidden py-4   ${
             hovered
               ? "max-h-[1000px] opacity-100 scale-100 "
-              : "max-h-0 opacity-30 scale-95 "
+              : "max-h-0 opacity-0 scale-95 "
           }`}
           style={{ transitionProperty: "opacity, transform, max-height" }}
         >
