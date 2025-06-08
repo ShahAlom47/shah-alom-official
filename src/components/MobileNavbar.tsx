@@ -1,33 +1,34 @@
 "use client";
-import React from "react";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { DialogTitle } from "@radix-ui/react-dialog";
+import React, { useState } from "react";
 import { CgMenuHotdog } from "react-icons/cg";
-import ThemeChanger from "./ThemeChanger";
 import NavLinks from "./NavLinks";
 import Logo from "./Logo";
+import Drawer from "./Drawer";
 
 const MobileNavBar = () => {
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className=" flex items-center justify-between bg-color-primary text-white w-full ">
-      <div className=" flex items-center gap-2 justify-between ">
-        <Drawer direction="left">
-          <DrawerTrigger className=" cursor-pointer pt-1 my-auto">
-            <CgMenuHotdog size={30} />
-          </DrawerTrigger>
-          <DrawerContent className="left-0 top-0 bottom-0 w-[40%] h-full rounded-r-md border bg-color-primary rounded-sm text-white ">
-            <DialogTitle></DialogTitle>
-           <NavLinks/>
-          </DrawerContent>
-        </Drawer>
-      <Logo></Logo>
+    <div className="flex items-center justify-between w-full px-4 py-2 bg-[var(--custom-bg)] text-[var(--custom-title)]">
+      <Logo />
+      <button
+        onClick={() => setIsOpen(true)}
+        className="cursor-pointer p-2 rounded hover:bg-[var(--custom-card-hover)]"
+      >
+        <CgMenuHotdog size={26} />
+      </button>
+
+      <Drawer
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        direction="right"
+        width="w-[50%]"
+        className="rounded-l-lg "
+      >
+      <div className="flex flex-col gap-2">
+          <NavLinks />
       </div>
-      <div className="flex items-center gap-1 ">
-        {/* <BookmarkContainer></BookmarkContainer> */}
-        <ThemeChanger></ThemeChanger>
-        {/* <NavAuthMenu></NavAuthMenu> */}
-      </div>
+      </Drawer>
     </div>
   );
 };

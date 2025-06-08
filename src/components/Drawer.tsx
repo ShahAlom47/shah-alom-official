@@ -1,0 +1,92 @@
+"use client";
+import React, { useEffect } from "react";
+
+interface DrawerProps {
+  isOpen: boolean;
+  onClose: () => void;
+  direction?: "left" | "right" | "top" | "bottom";
+  width?: string;
+  height?: string;
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Drawer: React.FC<DrawerProps> = ({
+  isOpen,
+  onClose,
+  direction = "right",
+  width = "w-[70%]",
+  height = "h-[70%]",
+  className = "",
+  children,
+}) => {
+
+    useEffect(() => {
+  if (isOpen) {
+    document.body.classList.add("overflow-hidden");
+  } else {
+    document.body.classList.remove("overflow-hidden");
+  }
+
+  return () => {
+    document.body.classList.remove("overflow-hidden");
+  };
+}, [isOpen]);
+
+  const getPositionClasses = () => {
+    switch (direction) {
+      case "left":
+        return `top-0 left-0  h-screen ${width} ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`;
+      case "right":
+        return `top-0 right-0  h-screen ${width} ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`;
+      case "top":
+        return `top-0 left-0 w-full ${height} ${
+          isOpen ? "translate-y-0" : "-translate-y-full"
+        }`;
+      case "bottom":
+        return `bottom-0 left-0 w-full ${height} ${
+          isOpen ? "translate-y-0" : "translate-y-full"
+        }`;
+      default:
+        return "";
+    }
+  };
+
+  return (
+    <>
+      {/* Overlay */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-black/90 backdrop-blur-sm z-40"
+        />
+      )}
+
+      {/* Drawer Panel */}
+      <div
+        className={`
+          fixed bg-background  z-50 shadow-lg
+          border border-[var(--border)]
+          transform transition-transform duration-300 h-full
+          ${getPositionClasses()} ${className}
+        `}
+      >
+        <div className="flex justify-end p-3">
+          <button
+            onClick={onClose}
+            className="text-2xl font-bold hover:text-red-500"
+          >
+            ✕
+          </button>
+        </div>
+        <div className="px-4">{children}</div>
+      </div>
+    </>
+  );
+};
+
+export default Drawer;

@@ -3,6 +3,7 @@ import useScreenInfo from "@/hooks/useScreenInfo";
 import React from "react";
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
+import MobileNavBar from "./MobileNavbar";
 const Navbar = () => {
  
   const { scrollY, scrollDirection } = useScreenInfo();
@@ -25,7 +26,7 @@ const Navbar = () => {
         </div>
       </div>
       <div className={`lg:hidden md:hidden flex items-center justify-between `}>
-        {/* <MobileNavBar></MobileNavBar> */}
+        <MobileNavBar></MobileNavBar>
       </div>
     </nav>
   );
