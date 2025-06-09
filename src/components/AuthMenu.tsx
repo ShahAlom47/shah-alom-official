@@ -5,11 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import PrimaryButton from "./PrimaryButton";
 
-interface Session {
-  user: string;
-  email: string;
-  photoUrl: string;
-}
+// interface Session {
+//   user: string;
+//   email: string;
+//   photoUrl: string;
+// }
 
 const AuthMenu: React.FC = () => {
   // Dummy session (replace with real auth data)
@@ -23,10 +23,8 @@ const AuthMenu: React.FC = () => {
 
   if (!session) {
     return (
-      <PrimaryButton>
-        <Link href="/login" >
-          Login
-        </Link>
+      <PrimaryButton  href="/login">
+      Login
       </PrimaryButton>
     );
   }
@@ -40,7 +38,7 @@ const AuthMenu: React.FC = () => {
       >
         <div className="w-10 rounded-full">
           <Image
-            src={session.photoUrl}
+            src={''}
             alt="User Avatar"
             width={40}
             height={40}
