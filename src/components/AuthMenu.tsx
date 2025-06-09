@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import PrimaryButton from "./PrimaryButton";
 
 interface Session {
   user: string;
@@ -12,25 +13,31 @@ interface Session {
 
 const AuthMenu: React.FC = () => {
   // Dummy session (replace with real auth data)
-//   const session: Session | null = {
-//     user: "Shah Alom",
-//     email: "shah@example.com",
-//     photoUrl: "/avatar.png", // Make sure this image exists in /public
-//   };
+  //   const session: Session | null = {
+  //     user: "Shah Alom",
+  //     email: "shah@example.com",
+  //     photoUrl: "/avatar.png", // Make sure this image exists in /public
+  //   };
 
-const session= null
+  const session = null;
 
   if (!session) {
     return (
-      <Link href="/login" className="btn btn-sm btn-primary">
-        Login
-      </Link>
+      <PrimaryButton>
+        <Link href="/login" >
+          Login
+        </Link>
+      </PrimaryButton>
     );
   }
 
   return (
     <div className="dropdown dropdown-end">
-      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+      <div
+        tabIndex={0}
+        role="button"
+        className="btn btn-ghost btn-circle avatar"
+      >
         <div className="w-10 rounded-full">
           <Image
             src={session.photoUrl}
