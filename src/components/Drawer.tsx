@@ -83,7 +83,7 @@ const Drawer: React.FC<DrawerProps> = ({
             ✕
           </button>
         </div>
-        <div className="px-4">{children}</div>
+        <div className="">{children}</div>
       </div>
     </>
   );
