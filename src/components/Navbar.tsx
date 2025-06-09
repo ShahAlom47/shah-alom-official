@@ -4,6 +4,7 @@ import React from "react";
 import Logo from "./Logo";
 import NavLinks from "./NavLinks";
 import MobileNavBar from "./MobileNavbar";
+import AuthMenu from "./AuthMenu";
 const Navbar = () => {
  
   const { scrollY, scrollDirection } = useScreenInfo();
@@ -24,6 +25,7 @@ const Navbar = () => {
         </div>
         <div className="flex items-center gap-4 ">
           <NavLinks></NavLinks>
+          <AuthMenu></AuthMenu>
         </div>
       </div>
       <div className={`lg:hidden md:hidden flex items-center justify-between `}>

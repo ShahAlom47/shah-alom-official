@@ -26,7 +26,10 @@ const MobileNavBar = () => {
         className="rounded-l-lg "
       >
       <div className="flex flex-col gap-2 p-2">
-        <div className="py-4 w-full border-b-2 border-grayLight mb-3"></div>
+        <div className="py-4 w-full border-b-2 border-grayLight mb-3 flex gap-2">
+          
+
+        </div>
           <NavLinks />
       </div>
       </Drawer>
