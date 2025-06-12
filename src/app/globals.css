@@ -71,6 +71,11 @@
 .bb {
   border: solid red 4px;
 }
+.max-w{
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 
 
