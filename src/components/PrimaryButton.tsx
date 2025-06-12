@@ -7,7 +7,7 @@ interface PrimaryButtonProps {
   className?: string;
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
-  href?: string; // 👈 add href prop
+  href?: string; 
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
