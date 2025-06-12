@@ -4,7 +4,7 @@ const Home = () => {
   return (
     <div className=' min-h-screen '>
 
-      <div className='primary-hover h-20 w-30'></div>
+      <div className='primary-hover h-20 w-24'></div>
       home
     </div>
   );
