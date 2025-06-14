@@ -14,7 +14,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full  z-50  duration-500 transition-all  ${showShadow?" bg-blackMid  bg-opacity-90 shadow-md shadow-grayDeep":"shadow-none"}  ${
+      className={`fixed top-0 left-0 w-full  z-50  duration-500 transition-all  ${showShadow?" bg-blackLight  bg-opacity-80 shadow-lg shadow-blackDeep":"shadow-none"}  ${
         showNavbar ? "translate-y-0 " : "-translate-y-[200%]"
       }  lg:px-5 md:px-3.5 px-2 py-4  `}
     >
