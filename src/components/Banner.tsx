@@ -1,20 +1,35 @@
 "use client";
 
 import { TypeAnimation } from "react-type-animation";
-// import bannerMobile from "@/assets/image/banner-mobile.png"
-import banner from "../assets/image/banner.png"
+import bannerMobile from "../assets/image/banner-mobile.png";
+import banner from "../assets/image/banner.png";
+import useScreenInfo from "@/hooks/useScreenInfo";
+import { useEffect, useState } from "react";
 
 const Banner = () => {
+  const { width } = useScreenInfo();
+    const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  const isMobileScreen = width < 768;
+
+  if (!hasMounted) return null; // Prevent SSR mismatch
+
+
   return (
-    <div className={` py-10 min-h-screen bg-cover bg-center  bg-opacity-45` }
-        style={{
-    backgroundImage: `url(${banner.src})`
-  }}
-   >
-      <div className=" grid gap-3 grid-cols-1 lg:grid-cols-2 w-[90%] mx-auto  justify-center items-center "
-    
-      >
-        <div className="p-4 space-y-3 ">
+    <div
+      className="py-10  bg-cover bg-center "
+      style={{
+        backgroundImage: `url(${
+          isMobileScreen ? bannerMobile.src : banner.src
+        })`,
+      }}
+    >
+<div className="grid gap-3 grid-cols-1 lg:grid-cols-2 w-[90%] mx-auto justify-center items-end lg:items-center min-h-screen ">
+         <div className="p-4 space-y-3 order-2 lg:order-1  ">
           <h3 className=" uppercase text-grayDeep text-lg font-semibold">
             Welcome to my world
           </h3>
@@ -57,9 +72,7 @@ const Banner = () => {
           </h1>
         </div>
 
-        <div className="p-4 ">
-         
-        </div>
+       <div className="p-4  order-1 lg:order-2 h-full "></div>
       </div>
     </div>
   );
