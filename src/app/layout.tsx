@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import Providers from "@/Providers/Providers";
 
 export const metadata: Metadata = {
   title: "Shah Alom Official",
@@ -17,7 +18,9 @@ export default function RootLayout({
       <body className="min-h-screen ">
         <Navbar />
        <main className=" mt-16 min-h-screen py-2">
-         {children} 
+          <Providers>
+        {children}
+        </Providers>
        </main>
       </body>
     </html>
