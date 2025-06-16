@@ -4,6 +4,9 @@ import { useForm } from "react-hook-form";
 import "../../../style/authpage.css";
 import AuthCard from "@/components/AuthCard";
 import Link from "next/link";
+import toast from "react-hot-toast";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 type LoginFormInputs = {
   email: string;
@@ -12,6 +15,11 @@ type LoginFormInputs = {
 
 const Login: React.FC = () => {
   const [hovered, setHovered] = useState<boolean>(false);
+  const router = useRouter();
+
+const session = useSession()
+
+console.log(session)
 
   const {
     register,
@@ -19,10 +27,41 @@ const Login: React.FC = () => {
     formState: { errors },
   } = useForm<LoginFormInputs>();
 
-  const onSubmit = (data: LoginFormInputs) => {
-    console.log("Login Data:", data);
-    // You can handle login logic here (e.g., API call)
-  };
+  const onSubmit = async (data: LoginFormInputs) => {
+
+  try {
+    const res = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+
+    
+    console.log("Login response:", res);
+
+ if (res?.ok) {
+  toast.success("Logged in successfully!");
+  router.push("/");
+} else {
+  const rawError = res?.error || "";
+
+  if (rawError.includes("EC6B0000") || rawError.includes("ssl")) {
+    toast.error("Secure connection failed. Please check your internet or try again later.");
+  } else if (rawError.includes("No account")) {
+    toast.error("No account found with this email.");
+  } else if (rawError.includes("Incorrect password")) {
+    toast.error("The password you entered is incorrect.");
+  } else {
+    toast.error("Login failed. Please try again.");
+  }
+}
+
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error("Something went wrong during login. Please check your network and try again.");
+  }
+};
+  
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-[#1e1e2f] ">

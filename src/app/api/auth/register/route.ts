@@ -7,7 +7,6 @@ import { MongoServerError } from "mongodb";
 interface RequestBody {
   email: string;
   password: string;
-  role?: string;
   photoUrl?: string | null;
   name: string;
 }
