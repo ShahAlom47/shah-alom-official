@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../../style/authpage.css";
 import AuthCard from "@/components/AuthCard";
+import Link from "next/link";
 
 type LoginFormInputs = {
   email: string;
@@ -72,6 +73,13 @@ const Login: React.FC = () => {
               Login
             </span>
           </button>
+
+          <p className="flex gap-2 justify-center items-center text-xs text-gray-400 mt-2">
+            Don’t have an account?
+            <Link className="text-white underline hover:scale-105" href="/register">
+              Register
+            </Link>
+          </p>
         </form>
       </AuthCard>
     </div>

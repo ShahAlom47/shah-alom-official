@@ -1,5 +1,5 @@
 // src/utils/api.ts
-import { IFormInput } from "@/app/(auth)/register/page";
+
 import axios from "axios";
 
 export interface IApiResponse<T = unknown> {

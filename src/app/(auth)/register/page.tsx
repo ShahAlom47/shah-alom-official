@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "../../../style/authpage.css";
 import AuthCard from "@/components/AuthCard";
+import Link from "next/link";
 
 type RegisterFormInputs = {
   name: string;
@@ -56,14 +57,16 @@ const Register: React.FC = () => {
               className="w-full px-2 py-1 rounded-full bg-gray-900 border border-gray-50 outline-none focus:ring-2 focus:ring-gray-500"
             />
             {errors.email && (
-              <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           {/* Password Field */}
           <div>
             <input
-              type="password"
+              type="text"
               placeholder="Enter password"
               {...register("password", {
                 required: "Password is required",
@@ -84,7 +87,7 @@ const Register: React.FC = () => {
           {/* Confirm Password Field */}
           <div>
             <input
-              type="password"
+              type="text"
               placeholder="Confirm password"
               {...register("confirmPassword", {
                 required: "Please confirm your password",
@@ -109,6 +112,15 @@ const Register: React.FC = () => {
               Register
             </span>
           </button>
+
+         
+
+          <p className="flex gap-2 justify-center items-center text-xs text-gray-400 mt-2">
+            Already have an account?
+            <Link className="text-white underline hover:scale-105" href="/login">
+              Login
+            </Link>
+          </p>
         </form>
       </AuthCard>
     </div>
