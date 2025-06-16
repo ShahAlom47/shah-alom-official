@@ -105,7 +105,7 @@ export const authOptions: NextAuthOptions = {
             err !== null &&
             "message" in err &&
             typeof (err as { message: unknown }).message === "string" &&
-            ((err as { message: string }).message).startsWith("{")
+            (err as { message: string }).message.startsWith("{")
           ) {
             const parsed = JSON.parse((err as { message: string }).message);
             throw new Error(parsed.message); // Only expose safe message
@@ -143,9 +143,9 @@ export const authOptions: NextAuthOptions = {
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
-  // ✅ 3. JWT Callback — stores custom user info in token
   callbacks: {
     async jwt({ token, user }) {
+      // Just after login
       if (user) {
         token.id = user.id;
         token.name = user.name;
@@ -153,18 +153,28 @@ export const authOptions: NextAuthOptions = {
         token.role = user.role;
         token.image = user.image;
       }
+
+      // 🔁 Always sync with DB for latest user info
+      const usersCollection = await getUserCollection();
+      if (token.email) {
+        const dbUser = await usersCollection.findOne({ email: token.email });
+        if (dbUser) {
+          token.name = dbUser.name;
+          token.image = dbUser.image;
+          token.role = dbUser.role;
+        }
+      }
+
       return token;
     },
 
-    // ✅ 4. Session Callback — makes token values available in `session.user`
     async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.id as string; // Explicitly cast to string
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.role = token.role;
-        session.user.image = token.image ?? null; // Handle fallback for null
-      }
+      session.user.id = token.id as string;
+      session.user.name = token.name;
+      session.user.email = token.email;
+      session.user.role = token.role;
+      session.user.image = token.image ?? null;
+
       return session;
     },
   },
