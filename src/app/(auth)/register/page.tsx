@@ -4,26 +4,48 @@ import { useForm } from "react-hook-form";
 import "../../../style/authpage.css";
 import AuthCard from "@/components/AuthCard";
 import Link from "next/link";
+import { registerUser } from "@/lib/allApiRequest/apiRequests";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { handleApiError } from "@/utils/handleApiError";
+import { RegisterUser } from "@/lib/interfaces/usersInterfaces/userInterfaces";
 
-type RegisterFormInputs = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+
 
 const Register: React.FC = () => {
   const [hovered, setHovered] = useState<boolean>(false);
+  const router = useRouter();
 
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<RegisterFormInputs>();
+  } = useForm<RegisterUser>();
 
-  const onSubmit = (data: RegisterFormInputs) => {
-    console.log("Registration Data:", data);
+  const onSubmit = async (data: RegisterUser) => {
+  
+      try {
+    const res = await registerUser({ ...data });
+    console.log("Response from server:", res);
+
+    if (res?.success) {
+      toast.success(res.message || "Registration successful");
+      router.push("/login"); // Redirect to login page after successful registration
+
+
+
+    } else {
+      toast.error(res.message || "Registration failed");
+      console.warn("Server responded with success: false", res);
+   
+
+    }
+  } catch (error) {
+    handleApiError(error);  // Use the centralized error handler
+  } finally {
+    console.log("Form Data:", data);
+  }
   };
 
   const password = watch("password");

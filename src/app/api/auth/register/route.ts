@@ -13,6 +13,7 @@ interface RequestBody {
 }
 
 export const POST = async (req: Request): Promise<NextResponse> => {
+  console.log("Register API called");
   try {
     const usersCollection = await getUserCollection();
     const body: RequestBody = await req.json();
