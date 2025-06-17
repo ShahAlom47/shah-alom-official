@@ -6,18 +6,15 @@ import Link from "next/link";
 import PrimaryButton from "./PrimaryButton";
 import { signOut, useSession } from "next-auth/react";
 import { FaSpinner } from "react-icons/fa";
-import defaultUserImage from "../assets/image/defaultUserWhite.webp"; // Adjust the path as necessary
+import defaultUserImage from "../assets/image/defaultUserWhite.webp";
 
 const AuthMenu: React.FC = () => {
   const { data: sessionData, status } = useSession();
 
-  // Loading state
   if (status === "loading") {
-    return <span className="animate-spin "><FaSpinner />
-</span>;
+    return <span className="animate-spin"><FaSpinner /></span>;
   }
 
-  // Not authenticated
   if (!sessionData?.user) {
     return (
       <PrimaryButton href="/login">
@@ -26,8 +23,12 @@ const AuthMenu: React.FC = () => {
     );
   }
 
-  // Authenticated user
-  const { name,  image } = sessionData?.user;
+  const { name, image, role } = sessionData.user as {
+    name?: string;
+    email?: string;
+    image?: string;
+    role?: string;
+  };
 
   return (
     <div className="dropdown dropdown-end">
@@ -43,12 +44,9 @@ const AuthMenu: React.FC = () => {
         </div>
       </div>
 
-      <ul
-        tabIndex={0}
-        className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
-      >
+      <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
         <li className="font-semibold text-sm text-gray-500 px-2 py-1 uppercase">
-           {name || "User"}
+          {name || "User"}
         </li>
         <li>
           <Link href="/profile">Profile</Link>
@@ -56,6 +54,14 @@ const AuthMenu: React.FC = () => {
         <li>
           <Link href="/settings">Settings</Link>
         </li>
+
+        {/* Only show if user is admin */}
+        {role === "admin" && (
+          <li>
+            <Link href="/admin/dashboard" className="text-red-600 font-semibold">Dashboard</Link>
+          </li>
+        )}
+
         <li>
           <button onClick={() => signOut()} className="text-left w-full">Logout</button>
         </li>
