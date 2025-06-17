@@ -5,9 +5,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Loading from "@/app/loading";
 
-type UserRole = "admin" | "user" | "guest"; // Define your user roles here
+type UserRole = "admin" | "user" | "guest";
 
-// Generic type for React Component Props
 export default function isAuth<P>(
   Component: React.ComponentType<P>,
   roles: UserRole[] = []
@@ -17,23 +16,24 @@ export default function isAuth<P>(
     const router = useRouter();
 
     useEffect(() => {
-      if (status === "loading") return; 
+      if (status === "loading") return;
+
       if (!session) {
-        router.push("/login");
+        router.replace("/login");  // use replace to avoid back button confusion
       } else if (
         roles.length > 0 &&
         !roles.includes(session.user?.role as UserRole)
       ) {
-        router.push("/unauthorized");
+        router.replace("/unauthorized");
       }
     }, [session, status, roles, router]);
 
-    if (status === "loading") {
-      return <Loading></Loading>;
+    if (status === "loading" || !session) {
+      return <Loading />;  // UI hide + loading spinner till auth confirmed
     }
 
-    if (!session) {
-      return null; 
+    if (roles.length > 0 && !roles.includes(session.user?.role as UserRole)) {
+      return null; // Unauthorized handled in useEffect redirect
     }
 
     return <Component {...props} />;
