@@ -2,7 +2,6 @@
 import { MongoClient, ServerApiVersion, Db } from "mongodb";
 
 const uri: string = process.env.MONGODB_URI as string;
-console.log("Mongo URI:", uri); // debugging
 
 let client: MongoClient;
 let clientPromise: Promise<MongoClient>;

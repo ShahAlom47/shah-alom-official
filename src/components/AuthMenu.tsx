@@ -4,41 +4,37 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import PrimaryButton from "./PrimaryButton";
-
-// interface Session {
-//   user: string;
-//   email: string;
-//   photoUrl: string;
-// }
+import { signOut, useSession } from "next-auth/react";
+import { FaSpinner } from "react-icons/fa";
+import defaultUserImage from "../assets/image/defaultUserWhite.webp"; // Adjust the path as necessary
 
 const AuthMenu: React.FC = () => {
-  // Dummy session (replace with real auth data)
-  //   const session: Session | null = {
-  //     user: "Shah Alom",
-  //     email: "shah@example.com",
-  //     photoUrl: "/avatar.png", // Make sure this image exists in /public
-  //   };
+  const { data: sessionData, status } = useSession();
 
-  const session = null;
+  // Loading state
+  if (status === "loading") {
+    return <span className="animate-spin "><FaSpinner />
+</span>;
+  }
 
-  if (!session) {
+  // Not authenticated
+  if (!sessionData?.user) {
     return (
-      <PrimaryButton  href="/login">
-      Login
+      <PrimaryButton href="/login">
+        Login
       </PrimaryButton>
     );
   }
 
+  // Authenticated user
+  const { name,  image } = sessionData?.user;
+
   return (
     <div className="dropdown dropdown-end">
-      <div
-        tabIndex={0}
-        role="button"
-        className="btn btn-ghost btn-circle avatar"
-      >
-        <div className="w-10 rounded-full">
+      <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+        <div className="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
           <Image
-            src={''}
+            src={image || defaultUserImage}
             alt="User Avatar"
             width={40}
             height={40}
@@ -51,6 +47,9 @@ const AuthMenu: React.FC = () => {
         tabIndex={0}
         className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52"
       >
+        <li className="font-semibold text-sm text-gray-500 px-2 py-1 uppercase">
+           {name || "User"}
+        </li>
         <li>
           <Link href="/profile">Profile</Link>
         </li>
@@ -58,7 +57,7 @@ const AuthMenu: React.FC = () => {
           <Link href="/settings">Settings</Link>
         </li>
         <li>
-          <button className="text-left w-full">Logout</button>
+          <button onClick={() => signOut()} className="text-left w-full">Logout</button>
         </li>
       </ul>
     </div>

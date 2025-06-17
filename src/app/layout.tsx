@@ -16,12 +16,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="min-h-screen ">
-        <Navbar />
-       <main className=" mt-16 min-h-screen py-2">
-          <Providers>
-        {children}
+        <Providers>
+          <Navbar />
+          <main className=" mt-16 min-h-screen py-2">{children}</main>
         </Providers>
-       </main>
       </body>
     </html>
   );
