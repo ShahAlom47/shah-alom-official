@@ -1,18 +1,16 @@
 "use client";
 
 import React from "react";
-import { FaSpinner } from "react-icons/fa";
+import "../style/loadingSpinner.css"; // CSS টা নিচে দেওয়া হচ্ছে
 
-export default function Loading() {
+const Loading = () => {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-blackDeep text-white">
-      <div className="flex flex-col items-center space-y-4">
-        {/* Spinner */}
-        <FaSpinner className="animate-spin text-4xl text-primary" />
-
-        {/* Text */}
-        <p className="text-lg font-medium">Loading, please wait...</p>
-      </div>
+    <div className="min-h-screen bg-black flex flex-col justify-center items-center text-white relative overflow-hidden">
+      <div className="custom-loader"></div>
+      <p className="mt-6 text-xl font-semibold tracking-wide">Loading...</p>
+      <div className="glow-line "></div>
     </div>
   );
-}
+};
+
+export default Loading;
