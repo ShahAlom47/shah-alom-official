@@ -1,7 +1,8 @@
+
 import PageHeading from '@/components/PageHeading';
 import React from 'react';
 
-const portfolio = () => {
+const Portfolio = () => {
     return (
         <div>
             <PageHeading title='My Portfolio' subtitle='Visit my portfolio and keep your feedback'></PageHeading>
@@ -9,4 +10,4 @@ const portfolio = () => {
     );
 };
 
-export default portfolio;
+export default Portfolio;
