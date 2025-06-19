@@ -3,13 +3,13 @@
   position: absolute;
   width: 100px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: 100%;
   /* box-shadow: 0 0 20px #00e5ff; */
 }
 
 .custom-loader {
   border-bottom: 9px dashed #00e5ff;
-  border-left: 9px solid transparent;
+  border-left: 7px solid transparent;
   animation: spin 3s linear infinite;
 }
 

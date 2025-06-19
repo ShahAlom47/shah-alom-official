@@ -83,7 +83,6 @@
 .primary-hover {
   padding: 0.25rem 1rem; /* py-1 px-4 */
   border-radius: 0.125rem; /* rounded-sm */
-  color: #e11d48; /* text-primaryRed (example red-600) */
   font-weight: 500; /* font-medium */
   text-transform: uppercase;
 

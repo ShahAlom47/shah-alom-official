@@ -21,7 +21,7 @@ export default function NotFound() {
           caused. Happy exploring!
         </p>
         <Link href="/">
-          <button className="mt-6 px-6 py-2 bg-blue-500 font-bold text-white  rounded-full hover:bg-blue-700">
+          <button className="mt-6 primary-hover text-grayLight">
             Back to Home
           </button>
         </Link>
