@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/Providers/RootProvider/Providers";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Shah Alom Official",
@@ -19,6 +20,7 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           <main className=" mt-[0%] min-h-screen ">{children}</main>
+          <Footer></Footer>
         </Providers>
       </body>
     </html>
