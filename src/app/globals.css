@@ -99,3 +99,16 @@
   /* transform: translateY(-0.25rem); */
   box-shadow: 1px -2px 8px rgba(107, 105, 105, 0.39); /* hover:shadow-[1px_-2px_2px_#d8d8d863] */
 }
+
+
+
+/* scroll bar hide style  */
+/* Tailwind Custom Style */
+.scroll-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;    /* Firefox */
+}

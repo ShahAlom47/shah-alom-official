@@ -2,7 +2,7 @@
 "use client";
 
 import React from "react";
-import isAuth from "./isAuth";
+import isAuth from "../../ProtectedRoute/isAuth";
 
 const DashboardWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <>{children}</>;
