@@ -3,6 +3,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Providers from "@/Providers/RootProvider/Providers";
 import Footer from "@/components/Footer";
+import ConditionalWrapper from "@/components/wrappers/ConditionalWrapper";
 
 export const metadata: Metadata = {
   title: "Shah Alom Official",
@@ -18,9 +19,10 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body className="min-h-screen ">
         <Providers>
-          <Navbar />
+        <ConditionalWrapper hideOn={["dashboard","login"]}>  <Navbar /></ConditionalWrapper>
           <main className=" mt-[0%] min-h-screen ">{children}</main>
-          <Footer></Footer>
+            <ConditionalWrapper hideOn={["dashboard","login"]}>  <Footer /></ConditionalWrapper>
+         
         </Providers>
       </body>
     </html>
