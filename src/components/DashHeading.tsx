@@ -4,6 +4,7 @@ import dashLogo from "@/assets/logo/dasLogo.png";
 import { TiMessages } from "react-icons/ti";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai";
+import DashSearchBox from "./DashSearchBox";
 
 interface PropsType {
   navListOpen?: boolean;
@@ -36,7 +37,8 @@ const DashHeading = ({ navListOpen, setNavListOpen }: PropsType) => {
         >
           {navListOpen ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}
         </button>
-        <div className="w-full border border-white h-full p-4 ">
+        <div className="w-full">
+          <DashSearchBox></DashSearchBox>
 
         </div>
       </div>
