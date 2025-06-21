@@ -13,7 +13,7 @@ interface PropsType {
 
 const DashHeading = ({ navListOpen, setNavListOpen }: PropsType) => {
   return (
-    <div className=" flex gap-4 justify-between items-center bg-blackMid text-white p-4">
+    <div className=" flex gap-4 justify-between items-center  text-white p-4 h-full">
       <div className=" flex justify-center items-center gap-2 ">
         <Image
           className="rounded-full"
@@ -32,7 +32,7 @@ const DashHeading = ({ navListOpen, setNavListOpen }: PropsType) => {
       </div>
       <div className="flex-1 border  flex gap-3 items-center">
         <button
-          className="text-2xl text-grayLight hover:text-white transition-all duration-300 border border-white p-1"
+          className="text-2xl text-grayLight hover:text-white transition-all duration-300 primary-hover p-1"
           onClick={() => setNavListOpen && setNavListOpen(!navListOpen)}
         >
           {navListOpen ? <AiOutlineMenuFold /> : <AiOutlineMenuUnfold />}

@@ -13,14 +13,13 @@ const DashSearchBox: React.FC = () => {
     e.preventDefault();
     if (searchTerm.trim()) {
       console.log("Search Term:", searchTerm);
-      // এখানে searchTerm দিয়ে API call, filter বা অন্য কোনো কাজ করতে পারো
     }
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-2 border border-white p-1 text-white"
+      className="flex items-center gap-2 border border-whit primary-hover p-1 text-white"
     >
       <input
         className="px-2 w-full bg-transparent outline-none"
@@ -30,7 +29,7 @@ const DashSearchBox: React.FC = () => {
         value={searchTerm}
         onChange={handleChange}
       />
-      <button type="submit" className="px-2 hover:text-gray-400">
+      <button type="submit" className="px-1 text-grayLight hover:text-gray-400">
         <FaSearch />
       </button>
     </form>
