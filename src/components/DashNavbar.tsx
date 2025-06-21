@@ -4,21 +4,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { FaHome, FaFolderOpen, FaPlus, FaBlog } from "react-icons/fa";
 
-const DashNavbar = () => {
+interface PropsType {
+  isOpen: boolean;
+}
+
+const DashNavbar: React.FC<PropsType> = ({ isOpen }) => {
   const pathname = usePathname();
-  console.log("Current Pathname:", pathname);
 
   const navItems = [
-    { name: "OverView", href: "/dashboard", icon: FaHome },
-    { name: "Portfolio", href: "/portfolio", icon: FaFolderOpen },
-    { name: "Add Portfolio", href: "/profile", icon: FaPlus },
-    { name: "Blogs", href: "/blogs", icon: FaBlog },
-    { name: "Add Blog", href: "/add-blog", icon: FaPlus },
-    { name: "OverView", href: "/dashboard", icon: FaHome },
-    { name: "Portfolio", href: "/portfolio", icon: FaFolderOpen },
-    { name: "Add Portfolio", href: "/profile", icon: FaPlus },
-    { name: "Blogs", href: "/blogs", icon: FaBlog },
-    { name: "Add Blog", href: "/add-blog", icon: FaPlus },
     { name: "OverView", href: "/dashboard", icon: FaHome },
     { name: "Portfolio", href: "/portfolio", icon: FaFolderOpen },
     { name: "Add Portfolio", href: "/profile", icon: FaPlus },
@@ -27,24 +20,34 @@ const DashNavbar = () => {
   ];
 
   return (
-    <>
+    <div className="flex flex-col group gap-2 text-white">
       {navItems.map((item, index) => {
         const Icon = item.icon;
+        const isActive = pathname === item.href;
 
         return (
           <Link
             key={index}
             href={item.href}
-            className={`flex items-center gap-2 px-4 py-2 rounded-full hover:bg-blackDeep transition duration-200 ${
-              pathname === item.href ? "bg-blackDeep" : ""
-            }`}
+            className={` flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-300 ease-in-out overflow-hidden ${
+              isActive ? "bg-blackDeep" : "hover:bg-blackDeep"
+            } ${isOpen ? "w-48" : "w-12 group-hover:w-48"}`}
           >
-            {Icon && <Icon className="text-lg" />}
-            <span>{item.name}</span>
+            {Icon && <Icon className="text-lg flex-shrink-0" />}
+            <span
+              className={`text-sm font-medium whitespace-nowrap transition-all duration-300 ease-in-out
+              ${
+                isOpen
+                  ? "opacity-100 ml-2"
+                  : "opacity-0 ml-0 group-hover:opacity-100 group-hover:ml-2"
+              }`}
+            >
+              {item.name}
+            </span>
           </Link>
         );
       })}
-    </>
+    </div>
   );
 };
 
