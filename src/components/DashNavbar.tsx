@@ -14,7 +14,7 @@ const DashNavbar: React.FC<PropsType> = ({ isOpen }) => {
   const navItems = [
     { name: "OverView", href: "/dashboard", icon: FaHome },
     { name: "Portfolio", href: "/portfolio", icon: FaFolderOpen },
-    { name: "Add Portfolio", href: "/profile", icon: FaPlus },
+    { name: "Add Portfolio", href: "/dashboard/addPortfolio", icon: FaPlus },
     { name: "Blogs", href: "/blogs", icon: FaBlog },
     { name: "Add Blog", href: "/add-blog", icon: FaPlus },
   ];
