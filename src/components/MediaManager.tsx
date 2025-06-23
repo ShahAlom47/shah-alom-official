@@ -3,6 +3,8 @@
 
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
+import { FaCheckCircle,  } from "react-icons/fa";
+import { CiWarning } from "react-icons/ci";
 import Image from "next/image";
 
 export interface MediaItem {
@@ -22,6 +24,8 @@ const CLOUDINARY_CLOUD_NAME = "your_cloud_name";
 
 const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
   const [mediaList, setMediaList] = useState<MediaItem[]>(defaultMedia);
+  const [loadingIndexes, setLoadingIndexes] = useState<number[]>([]);
+  const [uploadStatus, setUploadStatus] = useState<Record<number, "success" | "error" | null>>({});
 
   const handleAddMedia = () => {
     setMediaList([...mediaList, { type: "image", url: "" }]);
@@ -38,28 +42,49 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
   };
 
   const handleImageUpload = async (index: number, file: File) => {
+    setLoadingIndexes((prev) => [...prev, index]);
+    setUploadStatus((prev) => ({ ...prev, [index]: null }));
+
+    const localUrl = URL.createObjectURL(file);
+    const newList = [...mediaList];
+    newList[index].url = localUrl;
+    setMediaList(newList);
+
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
-      method: "POST",
-      body: formData,
-    });
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
+        method: "POST",
+        body: formData,
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    const newList = [...mediaList];
-    newList[index].url = data.secure_url;
-    newList[index].publicId = data.public_id;
-    setMediaList(newList);
-    onChange(newList);
+      if (data.secure_url) {
+        newList[index].url = data.secure_url;
+        newList[index].publicId = data.public_id;
+        setUploadStatus((prev) => ({ ...prev, [index]: "success" }));
+      } else {
+        setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
+      }
+
+      setMediaList(newList);
+      onChange(newList);
+    } catch (err) {
+      console.error("Image upload error", err);
+      setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
+    } finally {
+      setLoadingIndexes((prev) => prev.filter((i) => i !== index));
+    }
   };
 
   const handleVideoUrl = (index: number, url: string) => {
     const videoId = extractYouTubeId(url);
-    const thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    if (!videoId) return;
 
+    const thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     const newList = [...mediaList];
     newList[index].url = url;
     newList[index].thumbnail = thumbnail;
@@ -68,9 +93,9 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
   };
 
   const extractYouTubeId = (url: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
+    const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
     const match = url.match(regExp);
-    return match && match[2].length === 11 ? match[2] : "";
+    return match && match[1].length === 11 ? match[1] : "";
   };
 
   const handleRemove = async (index: number) => {
@@ -131,26 +156,38 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
             />
           )}
 
-          {(media.type === "image" && media.url) && (
-            <Image
-              src={media.url}
-              alt="Uploaded preview"
-              width={300}
-              height={200}
-              className="rounded-lg object-cover"
-            />
+          {media.type === "image" && media.url && (
+            <div className="relative w-fit">
+              <Image
+                src={media.url}
+                alt="Preview"
+                width={200}
+                height={100}
+                className="rounded-lg object-cover"
+              />
+              {loadingIndexes.includes(index) && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm">
+                  Uploading...
+                </div>
+              )}
+              {uploadStatus[index] === "success" && !loadingIndexes.includes(index) && (
+                <FaCheckCircle className="absolute top-2 right-2 text-green-500 bg-white rounded-full" size={20} />
+              )}
+              {uploadStatus[index] === "error" && !loadingIndexes.includes(index) && (
+                <span className="absolute inset-0 bg-gray-300/80 font-bold text-red-500 flex gap-2 justify-center items-center  " > <CiWarning className=""/> Failed...</span>
+              )}
+            </div>
           )}
 
-          {/* {(media.type === "video" && media.thumbnail) && (
+          {media.type === "video" && media.thumbnail && (
             <Image
               src={media.thumbnail}
               alt="Video thumbnail"
               width={300}
               height={200}
               className="rounded-lg object-cover"
-              unauthorized  
             />
-          )} */}
+          )}
         </div>
       ))}
 
