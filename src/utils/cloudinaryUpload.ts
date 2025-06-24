@@ -13,13 +13,16 @@ export interface UploadError {
 
 export type UploadResponse = UploadResult | UploadError;
 
-const CLOUDINARY_UPLOAD_PRESET = "your_upload_preset";
-const CLOUDINARY_CLOUD_NAME = "your_cloud_name";
+const CLOUDINARY_UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUD_PRESET || "your_upload_preset";
+const CLOUDINARY_CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUD_NAME || "your_cloud_name";
+
 
 export async function uploadToCloudinary(
   file: File,
   folderName?: string
 ): Promise<UploadResponse> {
+
+    console.log("Uploading file to Cloudinary:", CLOUDINARY_CLOUD_NAME,CLOUDINARY_UPLOAD_PRESET)
   try {
     const formData = new FormData();
     formData.append("file", file);

@@ -110,6 +110,7 @@ const AddPortfolio: React.FC = () => {
 
       {/* Media Section */}
       <MediaManager
+      folderName="portfolio"
         onChange={(media: MediaItem[]) => setValue("media", media)}
       ></MediaManager>
 
