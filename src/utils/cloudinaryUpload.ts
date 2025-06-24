@@ -22,7 +22,6 @@ export async function uploadToCloudinary(
   folderName?: string
 ): Promise<UploadResponse> {
 
-    console.log("Uploading file to Cloudinary:", CLOUDINARY_CLOUD_NAME,CLOUDINARY_UPLOAD_PRESET)
   try {
     const formData = new FormData();
     formData.append("file", file);

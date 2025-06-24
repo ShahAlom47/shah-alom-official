@@ -1,41 +1,13 @@
 "use client";
 
 import MediaManager from "@/components/MediaManager";
+import { MediaItem, OptionType, ProjectFormInput } from "@/Interfaces/portfolioInterfaces";
 import { customStyles } from "@/style/formSelectStyle";
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import Select from "react-select";
 
-export interface MediaItem {
-  type: "image" | "video";
-  url: string;
-  thumbnail?: string;
-  publicId?: string;
-}
 
-export interface Project {
-  _id: string;
-  title: string;
-  slug: string;
-  description: string;
-  content?: string;
-  media: MediaItem[];
-  techStack: OptionType[];
-  tags?: OptionType[];
-  liveLink?: string;
-  repoLink?: string;
-  featured?: boolean;
-  order?: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-type ProjectFormInput = Omit<Project, "_id" | "createdAt" | "updatedAt">;
-
-type OptionType = {
-  value: string;
-  label: string;
-};
 
 // Tech stack options
 const techOptions: OptionType[] = [
@@ -74,7 +46,7 @@ const AddPortfolio: React.FC = () => {
 
   const onSubmit: SubmitHandler<ProjectFormInput> = (data) => {
     console.log("📦 Form Data:", data);
-    // এখানে ডাটা সাবমিট করো তোমার API এ
+   
   };
 
   return (
