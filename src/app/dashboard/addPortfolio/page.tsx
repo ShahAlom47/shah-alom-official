@@ -1,8 +1,10 @@
 "use client";
 
 import MediaManager from "@/components/MediaManager";
+import { customStyles } from "@/style/formSelectStyle";
 import React from "react";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import Select from "react-select";
 
 export interface MediaItem {
   type: "image" | "video";
@@ -18,8 +20,8 @@ export interface Project {
   description: string;
   content?: string;
   media: MediaItem[];
-  techStack: string[];
-  tags?: string[];
+  techStack: OptionType[];
+  tags?: OptionType[];
   liveLink?: string;
   repoLink?: string;
   featured?: boolean;
@@ -30,10 +32,30 @@ export interface Project {
 
 type ProjectFormInput = Omit<Project, "_id" | "createdAt" | "updatedAt">;
 
+type OptionType = {
+  value: string;
+  label: string;
+};
 
+// Tech stack options
+const techOptions: OptionType[] = [
+  { value: "react", label: "React" },
+  { value: "nextjs", label: "Next.js" },
+  { value: "nodejs", label: "Node.js" },
+  { value: "firebase", label: "Firebase" },
+  { value: "tailwind", label: "Tailwind CSS" },
+];
+
+// Tag options
+const tagOptions: OptionType[] = [
+  { value: "frontend", label: "Frontend" },
+  { value: "fullstack", label: "Full Stack" },
+  { value: "portfolio", label: "Portfolio" },
+  { value: "ecommerce", label: "E-commerce" },
+];
 
 const AddPortfolio: React.FC = () => {
-  const { register, handleSubmit, setValue,  } =
+  const { register, handleSubmit, setValue, control } =
     useForm<ProjectFormInput>({
       defaultValues: {
         title: "",
@@ -54,8 +76,6 @@ const AddPortfolio: React.FC = () => {
     console.log("📦 Form Data:", data);
     // এখানে ডাটা সাবমিট করো তোমার API এ
   };
-
-
 
   return (
     <form
@@ -89,100 +109,44 @@ const AddPortfolio: React.FC = () => {
       </div>
 
       {/* Media Section */}
-      <MediaManager  onChange={(media: MediaItem[]) => setValue("media", media)} ></MediaManager>
-    
-      {/* <div>
-        <h3 className="font-semibold mb-2">🎞 Media Gallery</h3>
-        {fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="flex flex-col md:flex-row gap-2 mb-3 items-center"
-          >
-            <select
-              {...register(`media.${index}.type` as const)}
-              className="input w-32"
-              defaultValue={field.type}
-            >
-              <option value="image">Image</option>
-              <option value="video">Video</option>
-            </select>
-
-            {mediaWatch[index]?.type === "image" ? (
-              <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, index)}
-                  className="input w-full flex-1"
-                />
-                {uploadingIndex === index && (
-                  <span className="ml-2 text-sm text-blue-400">
-                    Uploading...
-                  </span>
-                )}
-                {mediaWatch[index]?.url && (
-                  <Image
-                    width={80}
-                    height={80}
-                    unoptimized
-                    src={mediaWatch[index].url}
-                    alt={`media-${index}`}
-                    className="w-20 h-20 object-cover rounded-md ml-2"
-                  />
-                )}
-              </>
-            ) : (
-              <input
-                {...register(`media.${index}.url` as const, {
-                  required: mediaWatch[index]?.type === "video",
-                })}
-                placeholder="Video URL"
-                className="input w-full flex-1"
-              />
-            )}
-
-            <button
-              type="button"
-              onClick={() => handleRemoveMedia(index)}
-              className="text-red-400 px-2"
-            >
-              ✖
-            </button>
-          </div>
-        ))}
-
-        <button
-          type="button"
-          onClick={() => append({ type: "image", url: "" })}
-          className="primary-hover"
-        >
-          ➕ Add Media
-        </button>
-      </div> */}
+      <MediaManager
+        onChange={(media: MediaItem[]) => setValue("media", media)}
+      ></MediaManager>
 
       {/* Tech Stack + Tags */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input
-          {...register("techStack.0")}
-          placeholder="Tech Stack #1"
-          className="input w-full"
-        />
-        <input
-          {...register("techStack.1")}
-          placeholder="Tech Stack #2"
-          className="input w-full"
-        />
-        <input
-          {...register("tags.0")}
-          placeholder="Tag #1"
-          className="input w-full"
-        />
-        <input
-          {...register("tags.1")}
-          placeholder="Tag #2"
-          className="input w-full"
-        />
-      </div>
+
+      <Controller
+        name="techStack"
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            isMulti
+            options={techOptions}
+            styles={customStyles}
+            className="react-select-container"
+            classNamePrefix="react-select"
+            placeholder="Select Tech Stack"
+          />
+        )}
+      />
+
+      {/* Tags Multi Select */}
+      <Controller
+        name="tags"
+        control={control}
+        render={({ field }) => (
+          <Select
+            {...field}
+            isMulti
+            options={tagOptions}
+            className="react-select-container "
+            styles={customStyles}
+            classNamePrefix="react-select"
+            placeholder="Select Tags"
+          />
+        )}
+      />
 
       {/* Live & Repo Link */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

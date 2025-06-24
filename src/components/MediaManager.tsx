@@ -3,7 +3,7 @@
 
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
-import { FaCheckCircle,  } from "react-icons/fa";
+import { FaCheckCircle } from "react-icons/fa";
 import { CiWarning } from "react-icons/ci";
 import Image from "next/image";
 
@@ -23,28 +23,51 @@ const CLOUDINARY_UPLOAD_PRESET = "your_upload_preset";
 const CLOUDINARY_CLOUD_NAME = "your_cloud_name";
 
 const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
-  const [mediaList, setMediaList] = useState<MediaItem[]>(defaultMedia);
+  // Ensure every media item has all required fields with default values on initialization
+  const [mediaList, setMediaList] = useState<MediaItem[]>(
+    defaultMedia.map((item) => ({
+      type: item.type ?? "image",
+      url: item.url ?? "",
+      thumbnail: item.thumbnail ?? "",
+      publicId: item.publicId ?? "",
+    }))
+  );
+
   const [loadingIndexes, setLoadingIndexes] = useState<number[]>([]);
   const [uploadStatus, setUploadStatus] = useState<Record<number, "success" | "error" | null>>({});
 
+  // Add new media item with all required properties initialized
   const handleAddMedia = () => {
-    setMediaList([...mediaList, { type: "image", url: "" }]);
+    setMediaList([
+      ...mediaList,
+      {
+        type: "image",
+        url: "",
+        thumbnail: "",
+        publicId: "",
+      },
+    ]);
   };
 
+  // Replace entire media item on type change to avoid partial undefined states
   const handleTypeChange = (index: number, type: "image" | "video") => {
     const newList = [...mediaList];
-    newList[index].type = type;
-    newList[index].url = "";
-    delete newList[index].thumbnail;
-    delete newList[index].publicId;
+    newList[index] = {
+      type,
+      url: "",
+      thumbnail: "",
+      publicId: "",
+    };
     setMediaList(newList);
     onChange(newList);
   };
 
+  // Upload image to Cloudinary and update status
   const handleImageUpload = async (index: number, file: File) => {
     setLoadingIndexes((prev) => [...prev, index]);
     setUploadStatus((prev) => ({ ...prev, [index]: null }));
 
+    // Show local preview immediately
     const localUrl = URL.createObjectURL(file);
     const newList = [...mediaList];
     newList[index].url = localUrl;
@@ -80,24 +103,28 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
     }
   };
 
+  // Handle video URL input and thumbnail extraction
   const handleVideoUrl = (index: number, url: string) => {
     const videoId = extractYouTubeId(url);
-    if (!videoId) return;
-
-    const thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     const newList = [...mediaList];
     newList[index].url = url;
-    newList[index].thumbnail = thumbnail;
+    if (videoId) {
+      newList[index].thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+    } else {
+      newList[index].thumbnail = "";
+    }
     setMediaList(newList);
     onChange(newList);
   };
 
+  // Extract YouTube video ID from URL
   const extractYouTubeId = (url: string) => {
     const regExp = /^.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#&?]*).*/;
     const match = url.match(regExp);
     return match && match[1].length === 11 ? match[1] : "";
   };
 
+  // Remove media item and delete image from Cloudinary if needed
   const handleRemove = async (index: number) => {
     const media = mediaList[index];
     if (media.type === "image" && media.publicId) {
@@ -117,7 +144,7 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
       {mediaList.map((media, index) => (
         <div
           key={index}
-          className="border p-4 rounded-md flex flex-col gap-2 relative bg-white dark:bg-gray-900"
+          className="border p-4 rounded-md flex flex-col gap-2 relative bg-[#1d232a]"
         >
           <div className="flex gap-4 items-center">
             <select
@@ -132,6 +159,8 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
             <button
               onClick={() => handleRemove(index)}
               className="ml-auto text-red-500 hover:text-red-700"
+              type="button"
+              aria-label="Remove media"
             >
               <AiOutlineDelete size={20} />
             </button>
@@ -150,12 +179,13 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
             <input
               type="text"
               placeholder="Enter YouTube URL"
-              value={media.url || ""}
+              value={media.url ?? ""}
               onChange={(e) => handleVideoUrl(index, e.target.value)}
               className="input input-bordered w-full"
             />
           )}
 
+          {/* Show image preview with loading and status */}
           {media.type === "image" && media.url && (
             <div className="relative w-fit">
               <Image
@@ -171,15 +201,22 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
                 </div>
               )}
               {uploadStatus[index] === "success" && !loadingIndexes.includes(index) && (
-                <FaCheckCircle className="absolute top-2 right-2 text-green-500 bg-white rounded-full" size={20} />
+                <FaCheckCircle
+                  className="absolute top-2 right-2 text-green-500 bg-white rounded-full"
+                  size={20}
+                />
               )}
               {uploadStatus[index] === "error" && !loadingIndexes.includes(index) && (
-                <span className="absolute inset-0 bg-gray-300/80 font-bold text-red-500 flex gap-2 justify-center items-center  " > <CiWarning className=""/> Failed...</span>
+                <span className="absolute inset-0 bg-gray-300/80 font-bold text-red-500 flex gap-2 justify-center items-center">
+                  <CiWarning /> Failed...
+                </span>
               )}
             </div>
           )}
 
-          {media.type === "video" && media.thumbnail && (
+          {/* Optional: Show video thumbnail preview */}
+          {/* Uncomment if you want video thumbnails shown */}
+          {/* {media.type === "video" && media.thumbnail && (
             <Image
               src={media.thumbnail}
               alt="Video thumbnail"
@@ -187,15 +224,11 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
               height={200}
               className="rounded-lg object-cover"
             />
-          )}
+          )} */}
         </div>
       ))}
 
-      <button
-        type="button"
-        onClick={handleAddMedia}
-        className="btn btn-outline btn-primary"
-      >
+      <button type="button" onClick={handleAddMedia} className="primary-hover">
         + Add Media
       </button>
     </div>

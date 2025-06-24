@@ -23,6 +23,7 @@ module.exports = {
 			// aita  amar  light theme
   			grayLight: '#c4cfde', // title  sob   thakbe  ai  colo
   			grayDeep: '#6e7b8c',  //paragrap  and  description  etc  er  color  aita 
+			inputBg:"#1d232a", // input  er  color  aita
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
