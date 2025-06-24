@@ -6,34 +6,31 @@ export default withAuth(
     const { pathname } = req.nextUrl;
     const role = req.nextauth.token?.role;
 
-    console.log("🔐 Middleware hit:", pathname, "| Role:", role);
+    // 🔍 Check if token exists, else treat as unauthenticated
+    if (!req.nextauth.token) {
+      // Allow public routes & auth routes
+      const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
+      if (
+        publicRoutes.includes(pathname) ||
+        pathname.startsWith("/api/auth")
+      ) {
+        return NextResponse.next();
+      }
 
-    const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
-    if (
-      publicRoutes.includes(pathname) ||
-      pathname.startsWith("/api/auth")
-    ) {
-      return NextResponse.next();
-    }
-
-    if (!role) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
+
+    console.log("🔐 Middleware hit:", pathname, "| Role:", role);
 
     // ✅ Admin access to specific pages
     if (
       role === "admin" &&
-      (
-        pathname.startsWith("/dashboard/admin") 
-        // pathname === "/dashboard/addportfolio" ||  // UI Page
-        // pathname === "/api/change-user-role"       // API Endpoint
-      )
+      pathname.startsWith("/dashboard/admin")
     ) {
       return NextResponse.next();
     }
 
-    // ✅ User access to user dashboard
-
+    // ✅ User access
     if (
       role === "user" &&
       (pathname.startsWith("/dashboard/user") || pathname.startsWith("/api/user"))
@@ -41,17 +38,21 @@ export default withAuth(
       return NextResponse.next();
     }
 
-    // ✅ Both can access /dashboard
-    if (pathname === "/dashboard" && (role === "admin" || role === "user")) {
+    // ✅ Common dashboard access
+    if (
+      pathname === "/dashboard" &&
+      (role === "admin" || role === "user")
+    ) {
       return NextResponse.next();
     }
 
-    // If none match, redirect to unauthorized
+    // ❌ Unauthorized access fallback
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   },
   {
     callbacks: {
       authorized({ token }) {
+        // Prevent flickering: allow if token exists
         return !!token;
       },
     },

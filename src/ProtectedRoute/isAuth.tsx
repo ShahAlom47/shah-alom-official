@@ -16,24 +16,33 @@ export default function isAuth<P>(
     const router = useRouter();
 
     useEffect(() => {
-      if (status === "loading") return;
-
-      if (!session) {
-        router.replace("/login");  // use replace to avoid back button confusion
+      if (status === "unauthenticated") {
+        router.replace("/login");
       } else if (
+        status === "authenticated" &&
         roles.length > 0 &&
-        !roles.includes(session.user?.role as UserRole)
+        !roles.includes(session?.user?.role as UserRole)
       ) {
         router.replace("/unauthorized");
       }
-    }, [session, status, roles, router]);
+    }, [status, session, roles, router]);
 
-    if (status === "loading" || !session) {
-      return <Loading />;  // UI hide + loading spinner till auth confirmed
+    if (status === "loading") {
+      return (
+        <div className="flex justify-center items-center min-h-screen">
+          <Loading />
+        </div>
+      );
     }
 
-    if (roles.length > 0 && !roles.includes(session.user?.role as UserRole)) {
-      return null; // Unauthorized handled in useEffect redirect
+    // Prevent rendering if unauthorized or not logged in
+    if (
+      status === "unauthenticated" ||
+      (status === "authenticated" &&
+        roles.length > 0 &&
+        !roles.includes(session?.user?.role as UserRole))
+    ) {
+      return null;
     }
 
     return <Component {...props} />;
