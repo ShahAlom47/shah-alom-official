@@ -6,6 +6,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import { CiWarning } from "react-icons/ci";
 import Image from "next/image";
+import { uploadToCloudinary } from "@/utils/cloudinaryUpload";
 
 export interface MediaItem {
   type: "image" | "video";
@@ -17,12 +18,12 @@ export interface MediaItem {
 interface Props {
   onChange: (media: MediaItem[]) => void;
   defaultMedia?: MediaItem[];
+  folderName?: string; // Optional folder name for organization
 }
 
-const CLOUDINARY_UPLOAD_PRESET = "your_upload_preset";
-const CLOUDINARY_CLOUD_NAME = "your_cloud_name";
 
-const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
+
+const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName }) => {
   // Ensure every media item has all required fields with default values on initialization
   const [mediaList, setMediaList] = useState<MediaItem[]>(
     defaultMedia.map((item) => ({
@@ -63,45 +64,33 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [] }) => {
   };
 
   // Upload image to Cloudinary and update status
-  const handleImageUpload = async (index: number, file: File) => {
-    setLoadingIndexes((prev) => [...prev, index]);
-    setUploadStatus((prev) => ({ ...prev, [index]: null }));
 
-    // Show local preview immediately
-    const localUrl = URL.createObjectURL(file);
-    const newList = [...mediaList];
-    newList[index].url = localUrl;
-    setMediaList(newList);
+// Then inside your MediaManager component:
+const handleImageUpload = async (index: number, file: File) => {
+  setLoadingIndexes((prev) => [...prev, index]);
+  setUploadStatus((prev) => ({ ...prev, [index]: null }));
 
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+  const localUrl = URL.createObjectURL(file);
+  const newList = [...mediaList];
+  newList[index].url = localUrl;
+  setMediaList(newList);
 
-    try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`, {
-        method: "POST",
-        body: formData,
-      });
+  const result = await uploadToCloudinary(file, folderName);
 
-      const data = await res.json();
+  if (result.success) {
+    newList[index].url = result.data.secure_url;
+    newList[index].publicId = result.data.public_id;
+    setUploadStatus((prev) => ({ ...prev, [index]: "success" }));
+  } else {
+    console.error("Image upload failed:", result.error);
+    setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
+  }
 
-      if (data.secure_url) {
-        newList[index].url = data.secure_url;
-        newList[index].publicId = data.public_id;
-        setUploadStatus((prev) => ({ ...prev, [index]: "success" }));
-      } else {
-        setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
-      }
+  setMediaList(newList);
+  onChange(newList);
 
-      setMediaList(newList);
-      onChange(newList);
-    } catch (err) {
-      console.error("Image upload error", err);
-      setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
-    } finally {
-      setLoadingIndexes((prev) => prev.filter((i) => i !== index));
-    }
-  };
+  setLoadingIndexes((prev) => prev.filter((i) => i !== index));
+};
 
   // Handle video URL input and thumbnail extraction
   const handleVideoUrl = (index: number, url: string) => {
