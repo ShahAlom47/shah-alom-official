@@ -1,10 +1,12 @@
 "use client";
 
 import MediaManager from "@/components/MediaManager";
-import { MediaItem, OptionType, ProjectFormInput } from "@/Interfaces/portfolioInterfaces";
+import { MediaItem, OptionType, Project, ProjectFormInput } from "@/Interfaces/portfolioInterfaces";
+import { addPortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
 import { customStyles } from "@/style/formSelectStyle";
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import toast from "react-hot-toast";
 import Select from "react-select";
 
 
@@ -27,7 +29,7 @@ const tagOptions: OptionType[] = [
 ];
 
 const AddPortfolio: React.FC = () => {
-  const { register, handleSubmit, setValue, control } =
+  const { register, handleSubmit, setValue, control ,reset} =
     useForm<ProjectFormInput>({
       defaultValues: {
         title: "",
@@ -44,8 +46,19 @@ const AddPortfolio: React.FC = () => {
       },
     });
 
-  const onSubmit: SubmitHandler<ProjectFormInput> = (data) => {
-    console.log("📦 Form Data:", data);
+  const onSubmit: SubmitHandler<ProjectFormInput> = async(data) => {
+    const  res= await addPortfolio(data as Project)
+    
+    if (res?.success) {
+      toast.success(res.message || "Added Portfolio successful");
+      reset(); // Reset form after successful submission
+
+    } else {
+      toast.error(res.message || "Portfolio adding failed");
+      console.warn("Server responded with success: false", res);
+    }
+
+    console.log("📦 Response:", res);
    
   };
 

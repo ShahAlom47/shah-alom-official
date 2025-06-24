@@ -15,7 +15,7 @@ export interface MediaItem {
 }
 
 export interface Project {
-  _id: string;
+  _id?: string;
   title: string;
   slug: string;
   description: string;

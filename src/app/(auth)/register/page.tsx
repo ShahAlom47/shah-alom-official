@@ -8,7 +8,7 @@ import { registerUser } from "@/lib/allApiRequest/apiRequests";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { handleApiError } from "@/utils/handleApiError";
-import { RegisterUser } from "@/lib/interfaces/usersInterfaces/userInterfaces";
+import { RegisterUser } from "@/Interfaces/userInterfaces";
 
 
 
