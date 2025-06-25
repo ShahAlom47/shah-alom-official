@@ -14,7 +14,7 @@ interface PropsType {
 const DashHeading = ({ navListOpen, setNavListOpen }: PropsType) => {
   return (
     <div className=" flex gap-4 justify-between items-center  text-white p-4 h-full">
-      <div className=" flex justify-center items-center gap-2 ">
+      <div className=" flex justify-center items-center md:gap-2 ">
         <Image
           className="rounded-full"
           src={dashLogo}
@@ -24,7 +24,7 @@ const DashHeading = ({ navListOpen, setNavListOpen }: PropsType) => {
         ></Image>
         <h1
           className={`text-grayLight font-semibold text-xl uppercase whitespace-nowrap overflow-hidden transition-all duration-300 ease-in-out
-    ${navListOpen ? "max-w-[200px] opacity-100 ml-2" : "max-w-0 opacity-0 ml-0"}
+    ${navListOpen ? "md:max-w-[200px] max-w-0 opacity-100 ml-2" : "max-w-0 opacity-0 ml-0"}
   `}
         >
           Dashboard

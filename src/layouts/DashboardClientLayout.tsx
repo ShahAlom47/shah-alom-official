@@ -20,18 +20,18 @@ export default function DashboardClientLayout({
         <DashHeading navListOpen={isOpen} setNavListOpen={setIsOpen} />
       </header>
 
-      <div className="flex gap-2 min-h-[89vh] ">
-        <aside className={`${isOpen ? "" : " "} flex flex-col justify-between gap-3 p-3 transition-all  text-white`}>
-          <div className="overflow-y-scroll scroll-hide h-full max-h-[75vh] space-y-1 "><DashNavbar isOpen={isOpen} ></DashNavbar></div>
-          <div className="p-1 min-h-[10vh] flex flex-col   gap-3 items-center justify-center bg-blackDee rounded-sm">
-            <Link href={"/"} className="primary-hover text-sm w-full text-center flex items-center gap-2 justify-center "><FaHome></FaHome> {isOpen&& "Home"}
+      <div className="flex gap- w-full min-h-[89vh] ">
+        <aside className={`${isOpen ? "w-fit" : "md:w-16 w-0 "}  flex flex-col justify-between gap-3  py-3 px-0 transition-all  text-white `}>
+          <div className=" overflow-y-scroll scroll-hide h-full max-h-[75vh] space-y-1 "><DashNavbar isOpen={isOpen} ></DashNavbar></div>
+          <div className="md:p-3 p-1 min-h-[10vh] flex flex-col    gap-3 items-center justify-center bg-blackDee rounded-sm">
+            <Link href={"/"} className="primary-hover text-sm w-full text-center flex items-center gap-2 justify-center "><FaHome></FaHome> <span className={`${isOpen?" md:inline-block hidden":'hidden'}`} >Home</span>
             </Link>
-            <button className="primary-hover text-sm w-full text-center flex items-center gap-2 justify-center"><AiOutlineLogout /> {isOpen&& "Logout"}</button>
+            <button className="primary-hover text-sm w-full text-center flex items-center gap-2 justify-center"><AiOutlineLogout /> <span className={`${isOpen?" md:inline-block hidden":'hidden'}`} >Logout</span></button>
           </div>
         </aside>
 
-        <main className="flex-1 flex flex-col justify-between">
-          <div className="flex-1 max-h-[85vh] overflow-y-scroll bg-blackMid">{children}</div>
+        <main className="flex-1 flex flex-col justify-between  ">
+          <div className="flex-1 max-h-[85vh] overflow-y-scroll overflow-x-hidden bg-blackMid  p-3">{children}</div>
           <div className="text-center text-xs py-1 text-gray-500 border-t border-grayLight">
             © {new Date().getFullYear()} Shah Alom. All rights reserved.
           </div>
