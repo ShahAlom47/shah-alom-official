@@ -180,9 +180,9 @@ const handleImageUpload = async (index: number, file: File) => {
               <Image
                 src={media.url}
                 alt="Preview"
-                width={200}
-                height={100}
-                className="rounded-lg object-cover"
+                width={100}
+                height={60}
+                className="rounded-lg  md:w-32 h-12 w-20 md:h-20"
               />
               {loadingIndexes.includes(index) && (
                 <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white text-sm">

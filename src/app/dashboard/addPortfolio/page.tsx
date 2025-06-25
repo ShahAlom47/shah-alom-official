@@ -67,7 +67,7 @@ const AddPortfolio: React.FC = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="max-w-4xl mx-auto p-6 text-white space-y-6"
     >
-      <h2 className="text-2xl font-bold mb-4">➕ Add New Portfolio Project</h2>
+      <h2 className="md:text-2xl text-lg  font-bold mb-4">➕ Add New Portfolio Project</h2>
 
       {/* Title, Slug, Description */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
