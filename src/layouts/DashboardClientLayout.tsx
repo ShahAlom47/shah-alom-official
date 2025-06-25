@@ -21,7 +21,7 @@ export default function DashboardClientLayout({
       </header>
 
       <div className="flex gap- w-full min-h-[89vh] ">
-        <aside className={`${isOpen ? "w-fit" : "md:w-16 w-0 "}  flex flex-col justify-between gap-3  py-3 px-0 transition-all  text-white `}>
+        <aside className={`${isOpen ? "w-fit  px-2  " : "md:w-14 md:px-1 w-0  px-0 hover:w-fit hover:px-2  "} duration-500 ease-in-out  flex flex-col justify-between gap-3  py-3 transition-all  text-white `}>
           <div className=" overflow-y-scroll scroll-hide h-full max-h-[75vh] space-y-1 "><DashNavbar isOpen={isOpen} ></DashNavbar></div>
           <div className="md:p-3 p-1 min-h-[10vh] flex flex-col    gap-3 items-center justify-center bg-blackDee rounded-sm">
             <Link href={"/"} className="primary-hover text-sm w-full text-center flex items-center gap-2 justify-center "><FaHome></FaHome> <span className={`${isOpen?" md:inline-block hidden":'hidden'}`} >Home</span>
