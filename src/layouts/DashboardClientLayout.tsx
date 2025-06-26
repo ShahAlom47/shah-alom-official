@@ -20,7 +20,7 @@ export default function DashboardClientLayout({
         <DashHeading navListOpen={isOpen} setNavListOpen={setIsOpen} />
       </header>
 
-      <div className="flex gap- w-full min-h-[89vh] ">
+      <div className="flex gap- w-full min-h-[89vh] overflow-x-hidden ">
         <aside className={`${isOpen ? "w-fit  px-2  " : "md:w-14 md:px-1 w-0  px-0 hover:w-fit hover:px-2  "} duration-500 ease-in-out  flex flex-col justify-between gap-3  py-3 transition-all  text-white `}>
           <div className=" overflow-y-scroll scroll-hide h-full max-h-[75vh] space-y-1 "><DashNavbar isOpen={isOpen} ></DashNavbar></div>
           <div className="md:p-3 p-1 min-h-[10vh] flex flex-col    gap-3 items-center justify-center bg-blackDee rounded-sm">
@@ -31,7 +31,7 @@ export default function DashboardClientLayout({
         </aside>
 
         <main className="flex-1 flex flex-col justify-between  ">
-          <div className="flex-1 max-h-[85vh] overflow-y-scroll overflow-x-hidden bg-blackMid  p-3">{children}</div>
+          <div className="flex-1 max-h-[85vh] overflow-y-scroll overflow-x-hidden  bg-blackMid  p-3">{children}</div>
           <div className="text-center text-xs py-1 text-gray-500 border-t border-grayLight">
             © {new Date().getFullYear()} Shah Alom. All rights reserved.
           </div>

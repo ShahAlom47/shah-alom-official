@@ -1,5 +1,6 @@
 "use client";
 
+import DashPageTitle from "@/components/DashPageTitle";
 import MediaManager from "@/components/MediaManager";
 import { MediaItem, OptionType, Project, ProjectFormInput } from "@/Interfaces/portfolioInterfaces";
 import { addPortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
@@ -65,9 +66,9 @@ const AddPortfolio: React.FC = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="max-w-4xl mx-auto p-6 text-white space-y-6"
+      className="max-w mx-auto p-6 text-white space-y-6 min-w-[320px]"
     >
-      <h2 className="md:text-2xl text-lg  font-bold mb-4">➕ Add New Portfolio Project</h2>
+      <DashPageTitle>➕ Add New Portfolio Project</DashPageTitle>
 
       {/* Title, Slug, Description */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
