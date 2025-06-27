@@ -1,6 +1,7 @@
 
 import { GetAllPortfolioParams, Project } from "@/Interfaces/portfolioInterfaces";
 import { request } from "../apiRequests";
+import { ObjectId } from "mongodb";
 
 
 
@@ -15,6 +16,6 @@ export const getAllPortfolio = async ({ currentPage, limit, searchTrim }: GetAll
   return request("GET", url);
 };
 
-export const deletePortfolio= async (id: string) => {
+export const deletePortfolio= async (id: string|ObjectId ) => {
   return request("DELETE", `/portfolio/deletePortfolio/${id}`);
 }

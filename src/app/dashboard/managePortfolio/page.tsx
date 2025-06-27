@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useConfirm } from "@/hooks/useConfirm";
+import { ObjectId } from "mongodb";
 
 const ManagePortfolio = () => {
   const { ConfirmModal, confirm } = useConfirm();
@@ -48,7 +49,7 @@ const ManagePortfolio = () => {
   const portfolioData = (portfolio?.data as Project[]) || [];
   const totalPages = portfolio?.totalPages || 1; // Assuming portfolio contains totalPages
 
-  const handleDelete = async (id:string|undefined) => {
+  const handleDelete = async (id:ObjectId |string|undefined) => {
     const ok = await confirm({
       title: "Delete Item",
       message: "Are you sure you want to delete this item?",

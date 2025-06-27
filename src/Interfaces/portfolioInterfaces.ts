@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 
 
 export type ProjectFormInput = Omit<Project, "_id" | "createdAt" | "updatedAt">;
@@ -15,7 +16,7 @@ export interface MediaItem {
 }
 
 export interface Project {
-  _id?: string;
+    _id?: ObjectId | string; 
   title: string;
   slug: string;
   description: string;
