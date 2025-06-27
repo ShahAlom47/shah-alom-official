@@ -49,6 +49,16 @@ const AddPortfolio: React.FC = () => {
 
   const onSubmit: SubmitHandler<ProjectFormInput> = async(data) => {
     const  res= await addPortfolio(data as Project)
+     if (!data.media || data.media.length === 0) {
+    toast.error("At least one media item is required");
+    return;
+  }
+  if(!data?.techStack || data?.techStack.length === 0) {
+    toast.error("Please select at least one tech stack");
+    return;
+  }
+ 
+
     
     if (res?.success) {
       toast.success(res.message || "Added Portfolio successful");
@@ -83,7 +93,7 @@ const AddPortfolio: React.FC = () => {
           className="input w-full"
         />
         <textarea
-          {...register("description")}
+          {...register("description",{ required: true })}
           placeholder="Short Description"
           className="input min-h-16  col-span-2  w-full"
         />
@@ -108,6 +118,7 @@ const AddPortfolio: React.FC = () => {
         render={({ field }) => (
           <Select
             {...field}
+            
             isMulti
             options={techOptions}
             styles={customStyles}
@@ -138,12 +149,12 @@ const AddPortfolio: React.FC = () => {
       {/* Live & Repo Link */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
-          {...register("liveLink")}
+          {...register("liveLink", { required: true })}
           placeholder="Live Site Link"
           className="input w-full"
         />
         <input
-          {...register("repoLink")}
+          {...register("repoLink",{ required: true })}
           placeholder="GitHub Repo Link"
           className="input w-full"
         />
