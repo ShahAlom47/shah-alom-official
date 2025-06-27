@@ -1,14 +1,16 @@
 import { getPortfolioCollection } from "@/lib/database/db_collections";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { currentPage = 1, pageSize = 10 } = body;
+  
+    const url = new URL(req.url);
+    const currentPage = parseInt(url.searchParams.get("page") || "1", 10);
+    const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
 
-    if (!body || typeof body !== "object") {
+    if (isNaN(currentPage) || isNaN(pageSize)) {
       return NextResponse.json(
-        { message: "Invalid request body", success: false },
+        { message: "Invalid query parameters", success: false },
         { status: 400 }
       );
     }
@@ -34,7 +36,7 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error in POST /api/portfolio:", error);
+    console.error("Error in GET /api/portfolio:", error);
 
     return NextResponse.json(
       {
