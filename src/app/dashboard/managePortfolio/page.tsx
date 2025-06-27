@@ -5,12 +5,21 @@ import DashPageTitle from "@/components/DashPageTitle";
 import { CustomTable } from "@/components/ui/CustomTable";
 import { DashPaginationButton } from "@/components/ui/DashPaginationButton";
 import { Project } from "@/Interfaces/portfolioInterfaces";
-import { getAllPortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
+import {
+  deletePortfolio,
+  getAllPortfolio,
+} from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
+import { queryClient } from "@/Providers/QueryProvider";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
+
+import "react-confirm-alert/src/react-confirm-alert.css";
+import { useConfirm } from "@/hooks/useConfirm";
 
 const ManagePortfolio = () => {
+  const { ConfirmModal, confirm } = useConfirm();
   const [page, setPage] = useState(1);
   const limit = 10; // Assuming you want to fetch 10 items per page
 
@@ -19,7 +28,7 @@ const ManagePortfolio = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["portfolio"],
+    queryKey: ["getAllPortfolio"],
     queryFn: async () => {
       const response = await getAllPortfolio({
         currentPage: page,
@@ -37,31 +46,52 @@ const ManagePortfolio = () => {
   });
 
   const portfolioData = (portfolio?.data as Project[]) || [];
-  console.log(portfolioData, "portfolioData");
-
   const totalPages = portfolio?.totalPages || 1; // Assuming portfolio contains totalPages
+
+  const handleDelete = async (id:string|undefined) => {
+    const ok = await confirm({
+      title: "Delete Item",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Yes",
+      cancelText: "No",
+    });
+
+    if (ok) {
+        if (!id) {
+          toast.error("Invalid portfolio ID");  
+            return;
+        }
+      try {
+        const delateResponse = await deletePortfolio(id);
+
+        if (!delateResponse || !delateResponse.success) {
+          throw new Error(
+            delateResponse.message || "Failed to delete portfolio"
+          );
+        }
+
+        toast.success(
+          delateResponse.message || "Portfolio deleted successfully!"
+        );
+
+        // 🧠 React Query cache invalidation
+        queryClient.invalidateQueries({ queryKey: ["getAllPortfolio"] });
+      } catch (error) {
+        toast.error("Error deleting portfolio");
+        console.error(error);
+      }
+    } else {
+      console.log("❌ Cancelled");
+    }
+  };
 
   const columns = [
     { header: "Title", accessor: "title", isSummary: true },
     { header: "Live", accessor: "live" },
     { header: "Git Repo", accessor: "gitRepo" },
     { header: "View", accessor: "view" },
+    { header: "Delate", accessor: "delete" },
   ];
-
-  //   const data = [
-  //     {
-  //       name:,
-  //       email: "shah@example.com",
-  //       action: (
-  //         <Link
-  //           href={`/dashboard/portfolio/${"12345"}`}
-  //           className="primary-hover"
-  //         >
-  //           View
-  //         </Link>
-  //       ),
-  //     },
-  //   ];
 
   const data =
     portfolioData?.map((item) => ({
@@ -81,10 +111,18 @@ const ManagePortfolio = () => {
       ) : (
         "Not Available"
       ),
-      view:  (
-        <Link href={`dashboard/ManagePortfolio/${item?._id}`} className="btn btn-sm">
+      view: (
+        <Link
+          href={`dashboard/ManagePortfolio/${item?._id}`}
+          className="btn btn-sm"
+        >
           View Details
         </Link>
+      ),
+      delete: (
+        <button onClick={() => handleDelete(item?._id)} className=" btn-sm btn * bg-red-500 text-white">
+          Delete
+        </button>
       ),
     })) || [];
 
@@ -110,6 +148,7 @@ const ManagePortfolio = () => {
           />
         </>
       )}
+      {ConfirmModal}
     </div>
   );
 };

@@ -14,3 +14,7 @@ export const getAllPortfolio = async ({ currentPage, limit, searchTrim }: GetAll
 
   return request("GET", url);
 };
+
+export const deletePortfolio= async (id: string) => {
+  return request("DELETE", `/portfolio/deletePortfolio/${id}`);
+}
