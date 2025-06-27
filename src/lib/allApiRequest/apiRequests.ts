@@ -7,6 +7,9 @@ export interface IApiResponse<T = unknown> {
   success: boolean;
   message: string;
   data?: T;
+  totalData?: number;
+  currentPage?: number;
+  totalPages?: number;
   
 }
 

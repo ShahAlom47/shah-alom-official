@@ -5,7 +5,7 @@ export async function GET(req: NextRequest) {
   try {
   
     const url = new URL(req.url);
-    const currentPage = parseInt(url.searchParams.get("page") || "1", 10);
+    const currentPage = parseInt(url.searchParams.get("currentPage") || "1", 10);
     const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
 
     if (isNaN(currentPage) || isNaN(pageSize)) {
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         message: "Portfolio retrieved successfully",
         success: true,
         data,
-        total,
+        totalData: total,
         currentPage,
         totalPages: Math.ceil(total / pageSize),
       },

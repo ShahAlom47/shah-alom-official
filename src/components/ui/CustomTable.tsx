@@ -45,16 +45,16 @@ export function CustomTable<T extends object>({
   };
 
   return (
-    <div className={`w-full ${className}`}>
+    <div className={`w-full shadow-2xl shadow-stone-600   ${className} `}>
       {/* 🖥️ Desktop Table */}
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full border border-gray-200 dark:border-gray-700">
-          <thead className="bg-gray-100 dark:bg-gray-800">
+          <thead className="bg-blackLight ">
             <tr>
               {columns.map((col, idx) => (
                 <th
                   key={idx}
-                  className="p-3 text-left font-semibold border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300"
+                  className="p-3  font-semibold border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 text-center"
                 >
                   {col.header}
                 </th>
@@ -66,12 +66,12 @@ export function CustomTable<T extends object>({
               data.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
-                  className="border-b hover:bg-gray-50 dark:hover:bg-gray-900"
+                  className="border-b hover:bg-gray-50 dark:hover:bg-gray-900 "
                 >
                   {columns.map((col, colIndex) => (
                     <td
                       key={colIndex}
-                      className="p-3 border border-gray-200 dark:border-gray-700"
+                      className="p-1 border border-gray-200 dark:border-gray-700 text-center"
                     >
                       {getValue(row, col.accessor, col.render)}
                     </td>

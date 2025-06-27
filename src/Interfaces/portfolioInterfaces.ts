@@ -30,3 +30,10 @@ export interface Project {
   createdAt: string;
   updatedAt: string;
 }
+
+
+export type GetAllPortfolioParams = {
+  currentPage: number;  
+  limit: number;
+  searchTrim?: string;
+};
