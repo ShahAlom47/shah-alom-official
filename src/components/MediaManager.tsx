@@ -7,6 +7,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { CiWarning } from "react-icons/ci";
 import Image from "next/image";
 import { uploadToCloudinary } from "@/utils/cloudinaryUpload";
+import toast from "react-hot-toast";
 
 export interface MediaItem {
   type: "image" | "video";
@@ -114,19 +115,40 @@ const handleImageUpload = async (index: number, file: File) => {
   };
 
   // Remove media item and delete image from Cloudinary if needed
-  const handleRemove = async (index: number) => {
-    const media = mediaList[index];
-    if (media.type === "image" && media.publicId) {
-      await fetch("/api/delete-image", {
+
+
+const handleRemove = async (index: number) => {
+  const media = mediaList[index];
+
+  if (media.type === "image" && media.publicId) {
+    try {
+      const res = await fetch("/api/manageMedia/deleteCloudImage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ publicId: media.publicId }),
       });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        toast.success(data.message || "Image deleted successfully");
+      } else {
+        toast.error(data.message || "Failed to delete image");
+        return; // error হলে ফাংশন থামাবে, আর mediaList থেকে remove করবে না
+      }
+    } catch (error) {
+      toast.error("Something went wrong while deleting the image");
+      console.error(error);
+      return; // error হলে থামাবে
     }
-    const newList = mediaList.filter((_, i) => i !== index);
-    setMediaList(newList);
-    onChange(newList);
-  };
+  }
+
+  // Delete সফল হলে বা media টাইপ অন্য কিছু হলে list থেকে remove করো
+  const newList = mediaList.filter((_, i) => i !== index);
+  setMediaList(newList);
+  onChange(newList);
+};
+
 
   return (
     <div className="space-y-4">

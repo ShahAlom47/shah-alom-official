@@ -92,7 +92,7 @@ const ManagePortfolio = () => {
     { header: "Title", accessor: "title", isSummary: true },
     { header: "Live", accessor: "live" },
     { header: "Git Repo", accessor: "gitRepo" },
-    { header: "View", accessor: "view" },
+    { header: "Edit", accessor: "view" },
     { header: "Delate", accessor: "delete" },
   ];
 
@@ -116,10 +116,10 @@ const ManagePortfolio = () => {
       ),
       view: (
         <Link
-          href={`dashboard/ManagePortfolio/${item?._id}`}
+          href={`/dashboard/managePortfolio/${item?._id}`}
           className="btn btn-sm"
         >
-          View Details
+         View & Edit
         </Link>
       ),
       delete: (

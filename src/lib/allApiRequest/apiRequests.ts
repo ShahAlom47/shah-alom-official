@@ -20,7 +20,7 @@ const api = axios.create({
 });
 
 export const request = async <T>(
-  method: "GET" | "POST" | "PUT" | "DELETE",
+  method: "GET" | "POST" | "PUT" | "PATCH"| "DELETE",
   url: string,
   data?: Record<string, unknown> | FormData,
   isForm?: "formData",

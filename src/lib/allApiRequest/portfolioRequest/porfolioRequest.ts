@@ -16,6 +16,14 @@ export const getAllPortfolio = async ({ currentPage, limit, searchTrim }: GetAll
   return request("GET", url);
 };
 
+export const getSinglePortfolio = async (id:string|ObjectId,)=>{
+  return request("GET",`/portfolio/getSinglePortfolio/${id}`)
+}
+
+export const updatePortfolio = async (id:string|ObjectId,data:Project)=>{
+  return request("PATCH",`/portfolio/updatePortfolio/${id}`,{...data})
+}
+
 export const deletePortfolio= async (id: string|ObjectId ) => {
   return request("DELETE", `/portfolio/deletePortfolio/${id}`);
 }
