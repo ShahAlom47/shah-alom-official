@@ -1,9 +1,24 @@
-"use client";
-import React, { useState, FormEvent, ChangeEvent } from "react";
-import { FaSearch } from "react-icons/fa";
 
-const DashSearchBox: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+import { clearDashSearchValue, setDashSearchValue } from "@/redux/features/search/DashSearchSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks/reduxHook";
+import { usePathname } from "next/navigation";
+import React, { useEffect, useState, FormEvent, ChangeEvent } from "react";
+import { FaSearch } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
+
+const DashSearchBox = () => {
+  const dispatch = useAppDispatch();
+  const pathname = usePathname();
+  const searchValue = useAppSelector((state) => state.dashSearch.dashSearchValue);
+  const [searchTerm, setSearchTerm] = useState(searchValue);
+
+  console.log(searchValue)
+
+  useEffect(() => {
+    // Clear search value on page change
+    dispatch(clearDashSearchValue());
+    setSearchTerm(""); // reset local state too
+  }, [pathname, dispatch]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -12,14 +27,19 @@ const DashSearchBox: React.FC = () => {
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      console.log("Search Term:", searchTerm);
+      dispatch(setDashSearchValue(searchTerm));
     }
+  };
+
+  const handleClear = () => {
+    setSearchTerm("");
+    dispatch(clearDashSearchValue());
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex items-center gap-2 border border-whit primary-hover p-1 text-white"
+      className="flex items-center gap-2 border border-white primary-hover p-1 text-white relative"
     >
       <input
         className="px-2 w-full bg-transparent outline-none"
@@ -29,7 +49,21 @@ const DashSearchBox: React.FC = () => {
         value={searchTerm}
         onChange={handleChange}
       />
-      <button type="submit" className="px-1 text-grayLight hover:text-gray-400">
+
+      {searchTerm && (
+        <button
+          type="button"
+          onClick={handleClear}
+          className="absolute right-10 text-grayLight hover:text-red-400"
+        >
+          <IoMdClose size={18} />
+        </button>
+      )}
+
+      <button
+        type="submit"
+        className="text-grayLight hover:text-gray-400 px-1"
+      >
         <FaSearch />
       </button>
     </form>
