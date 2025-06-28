@@ -18,23 +18,25 @@ import toast from "react-hot-toast";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { useConfirm } from "@/hooks/useConfirm";
 import { ObjectId } from "mongodb";
+import { useAppSelector } from "@/redux/hooks/reduxHook";
 
 const ManagePortfolio = () => {
   const { ConfirmModal, confirm } = useConfirm();
   const [page, setPage] = useState(1);
   const limit = 10; // Assuming you want to fetch 10 items per page
+    const searchValue = useAppSelector((state) => state.dashSearch.dashSearchValue);
 
   const {
     data: portfolio,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["getAllPortfolio"],
+    queryKey: ["getAllPortfolio",searchValue],
     queryFn: async () => {
       const response = await getAllPortfolio({
         currentPage: page,
         limit: limit,
-        searchTrim: "",
+        searchTrim: searchValue ,
       });
       if (!response || !response.success) {
         throw new globalThis.Error(

@@ -3,10 +3,15 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-  
     const url = new URL(req.url);
-    const currentPage = parseInt(url.searchParams.get("currentPage") || "1", 10);
+
+    const currentPage = parseInt(
+      url.searchParams.get("currentPage") || "1",
+      10
+    );
     const pageSize = parseInt(url.searchParams.get("pageSize") || "10", 10);
+    const searchTrim =
+      url.searchParams.get("searchTrim")?.trim().toLowerCase() || "";
 
     if (isNaN(currentPage) || isNaN(pageSize)) {
       return NextResponse.json(
@@ -16,12 +21,35 @@ export async function GET(req: NextRequest) {
     }
 
     const portfolioCollection = await getPortfolioCollection();
-
     const skip = (currentPage - 1) * pageSize;
 
+    // ✅ Search filter
+    const searchFilter = searchTrim
+      ? {
+          $or: [
+            { title: { $regex: searchTrim, $options: "i" } },
+            { description: { $regex: searchTrim, $options: "i" } },
+            { content: { $regex: searchTrim, $options: "i" } },
+            {
+              techStack: {
+                $elemMatch: {
+                  $regex: searchTrim,
+                  $options: "i",
+                },
+              },
+            },
+          ],
+        }
+      : {};
+
+    // ✅ Fetch filtered + paginated data
     const [data, total] = await Promise.all([
-      portfolioCollection.find().skip(skip).limit(pageSize).toArray(),
-      portfolioCollection.countDocuments(),
+      portfolioCollection
+        .find(searchFilter)
+        .skip(skip)
+        .limit(pageSize)
+        .toArray(),
+      portfolioCollection.countDocuments(searchFilter),
     ]);
 
     return NextResponse.json(

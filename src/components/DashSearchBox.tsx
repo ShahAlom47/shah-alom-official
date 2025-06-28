@@ -12,12 +12,11 @@ const DashSearchBox = () => {
   const searchValue = useAppSelector((state) => state.dashSearch.dashSearchValue);
   const [searchTerm, setSearchTerm] = useState(searchValue);
 
-  console.log(searchValue)
+
 
   useEffect(() => {
-    // Clear search value on page change
     dispatch(clearDashSearchValue());
-    setSearchTerm(""); // reset local state too
+    setSearchTerm(""); 
   }, [pathname, dispatch]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
