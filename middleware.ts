@@ -3,62 +3,75 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
-    const { pathname } = req.nextUrl;
-    const role = req.nextauth.token?.role;
+    const pathname = req.nextUrl.pathname.toLowerCase();
+    const token = req.nextauth.token;
+    const role = token?.role;
 
-    // 🔍 Check if token exists, else treat as unauthenticated
-    if (!req.nextauth.token) {
-      // Allow public routes & auth routes
-      const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
-      if (
-        publicRoutes.includes(pathname) ||
-        pathname.startsWith("/api/auth")
-      ) {
-        return NextResponse.next();
-      }
+    const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
+    const publicApiRoutes = ["/api/public-data", "/api/blogs"];
 
+    // ✅ Allow public pages & API without auth
+    if (
+      publicRoutes.includes(pathname) ||
+      publicApiRoutes.includes(pathname) ||
+      pathname.startsWith("/api/auth")
+    ) {
+      return NextResponse.next();
+    }
+
+    // ❌ No token = unauthenticated → redirect to login
+    if (!token) {
       return NextResponse.redirect(new URL("/login", req.url));
     }
 
     console.log("🔐 Middleware hit:", pathname, "| Role:", role);
 
-    // ✅ Admin access to specific pages
+    // ✅ Admin-only routes
+    if (pathname.startsWith("/dashboard/admin") && role === "admin") {
+      return NextResponse.next();
+    }
+
+    // ✅ User-only routes
     if (
-      role === "admin" &&
-      pathname.startsWith("/dashboard/admin")
+      (pathname.startsWith("/dashboard/user") || pathname.startsWith("/api/user")) &&
+      role === "user"
     ) {
       return NextResponse.next();
     }
 
-    // ✅ User access
-    if (
-      role === "user" &&
-      (pathname.startsWith("/dashboard/user") || pathname.startsWith("/api/user"))
-    ) {
+    // ✅ Common dashboard access for admin & user
+    if (pathname === "/dashboard" && (role === "admin" || role === "user")) {
       return NextResponse.next();
     }
 
-    // ✅ Common dashboard access
-    if (
-      pathname === "/dashboard" &&
-      (role === "admin" || role === "user")
-    ) {
-      return NextResponse.next();
-    }
-
-    // ❌ Unauthorized access fallback
+    // ❌ Unauthorized fallback
     return NextResponse.redirect(new URL("/unauthorized", req.url));
   },
   {
     callbacks: {
-      authorized({ token }) {
-        // Prevent flickering: allow if token exists
+      authorized({ token, req }) {
+        const path = req.nextUrl.pathname.toLowerCase();
+
+        const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
+        const publicApiRoutes = ["/api/public-data", "/api/blogs"];
+
+        // ✅ Allow public access without token
+        if (
+          publicRoutes.includes(path) ||
+          publicApiRoutes.includes(path) ||
+          path.startsWith("/api/auth")
+        ) {
+          return true;
+        }
+
+        // ✅ Allow private access only if token exists
         return !!token;
       },
     },
   }
 );
 
+// ✅ Middleware active on dashboard and API routes
 export const config = {
   matcher: ["/dashboard/:path*", "/api/:path*"],
 };

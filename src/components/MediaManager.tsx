@@ -22,13 +22,17 @@ interface Props {
   onChange: (media: MediaItem[]) => void;
   defaultMedia?: MediaItem[];
   folderName?: string; // Optional folder name for organization
-  dataId?:string| ObjectId|undefined| number
-  mediaCategory?:"portfolioMedia"|"blogMedia"| "projectMedia"  //like portfolioMedia ,blogMedia, userMedia etc
+  dataId?: string | ObjectId | undefined | number;
+  mediaCategory?: "portfolioMedia" | "blogMedia" | "projectMedia"; //like portfolioMedia ,blogMedia, userMedia etc
 }
 
-
-
-const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName,dataId,mediaCategory }) => {
+const MediaManager: React.FC<Props> = ({
+  onChange,
+  defaultMedia = [],
+  folderName,
+  dataId,
+  mediaCategory,
+}) => {
   // Ensure every media item has all required fields with default values on initialization
   const [mediaList, setMediaList] = useState<MediaItem[]>(
     defaultMedia.map((item) => ({
@@ -39,10 +43,11 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName,
     }))
   );
 
-
   const [loadingIndexes, setLoadingIndexes] = useState<number[]>([]);
-  const [uploadStatus, setUploadStatus] = useState<Record<number, "success" | "error" | null>>({});
-  const{confirm,ConfirmModal}= useConfirm()
+  const [uploadStatus, setUploadStatus] = useState<
+    Record<number, "success" | "error" | null>
+  >({});
+  const { confirm, ConfirmModal } = useConfirm();
 
   // Add new media item with all required properties initialized
   const handleAddMedia = () => {
@@ -72,32 +77,32 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName,
 
   // Upload image to Cloudinary and update status
 
-// Then inside your MediaManager component:
-const handleImageUpload = async (index: number, file: File) => {
-  setLoadingIndexes((prev) => [...prev, index]);
-  setUploadStatus((prev) => ({ ...prev, [index]: null }));
+  // Then inside your MediaManager component:
+  const handleImageUpload = async (index: number, file: File) => {
+    setLoadingIndexes((prev) => [...prev, index]);
+    setUploadStatus((prev) => ({ ...prev, [index]: null }));
 
-  const localUrl = URL.createObjectURL(file);
-  const newList = [...mediaList];
-  newList[index].url = localUrl;
-  setMediaList(newList);
+    const localUrl = URL.createObjectURL(file);
+    const newList = [...mediaList];
+    newList[index].url = localUrl;
+    setMediaList(newList);
 
-  const result = await uploadToCloudinary(file, folderName);
+    const result = await uploadToCloudinary(file, folderName);
 
-  if (result.success) {
-    newList[index].url = result.data.secure_url;
-    newList[index].publicId = result.data.public_id;
-    setUploadStatus((prev) => ({ ...prev, [index]: "success" }));
-  } else {
-    console.error("Image upload failed:", result.error);
-    setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
-  }
+    if (result.success) {
+      newList[index].url = result.data.secure_url;
+      newList[index].publicId = result.data.public_id;
+      setUploadStatus((prev) => ({ ...prev, [index]: "success" }));
+    } else {
+      console.error("Image upload failed:", result.error);
+      setUploadStatus((prev) => ({ ...prev, [index]: "error" }));
+    }
 
-  setMediaList(newList);
-  onChange(newList);
+    setMediaList(newList);
+    onChange(newList);
 
-  setLoadingIndexes((prev) => prev.filter((i) => i !== index));
-};
+    setLoadingIndexes((prev) => prev.filter((i) => i !== index));
+  };
 
   // Handle video URL input and thumbnail extraction
   const handleVideoUrl = (index: number, url: string) => {
@@ -105,7 +110,9 @@ const handleImageUpload = async (index: number, file: File) => {
     const newList = [...mediaList];
     newList[index].url = url;
     if (videoId) {
-      newList[index].thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
+      newList[
+        index
+      ].thumbnail = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
     } else {
       newList[index].thumbnail = "";
     }
@@ -122,49 +129,49 @@ const handleImageUpload = async (index: number, file: File) => {
 
   // Remove media item and delete image from Cloudinary if needed
 
-
-const handleRemove = async (index: number) => {
-   const ok = await confirm({
+  const handleRemove = async (index: number) => {
+    const ok = await confirm({
       title: "Delete ",
       message: "Are you sure you want to delete this item?",
       confirmText: "Yes",
       cancelText: "No",
     });
-if(!ok) return
+    if (!ok) return;
 
+    const media = mediaList[index];
 
+    if (media.type === "image" && media.publicId) {
+      try {
+        const res = await fetch("/api/manageMedia/deleteCloudImage", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            publicId: media.publicId,
+            dataId,
+            mediaCategory,
+          }),
+        });
 
-  const media = mediaList[index];
+        const data = await res.json();
 
-  if (media.type === "image" && media.publicId) {
-    try {
-      const res = await fetch("/api/manageMedia/deleteCloudImage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ publicId: media.publicId,dataId ,mediaCategory}),
-      });
-
-      const data = await res.json();
-
-      if (res.ok && data.success) {
-        toast.success(data.message || "Image deleted successfully");
-      } else {
-        toast.error(data.message || "Failed to delete image");
-        return; // error হলে ফাংশন থামাবে, আর mediaList থেকে remove করবে না
+        if (res.ok && data.success) {
+          toast.success(data.message || "Image deleted successfully");
+        } else {
+          toast.error(data.message || "Failed to delete image");
+          return; // error হলে ফাংশন থামাবে, আর mediaList থেকে remove করবে না
+        }
+      } catch (error) {
+        toast.error("Something went wrong while deleting the image");
+        console.error(error);
+        return; // error হলে থামাবে
       }
-    } catch (error) {
-      toast.error("Something went wrong while deleting the image");
-      console.error(error);
-      return; // error হলে থামাবে
     }
-  }
 
-  // Delete সফল হলে বা media টাইপ অন্য কিছু হলে list থেকে remove করো
-  const newList = mediaList.filter((_, i) => i !== index);
-  setMediaList(newList);
-  onChange(newList);
-};
-
+    // Delete সফল হলে বা media টাইপ অন্য কিছু হলে list থেকে remove করো
+    const newList = mediaList.filter((_, i) => i !== index);
+    setMediaList(newList);
+    onChange(newList);
+  };
 
   return (
     <div className="space-y-4">
@@ -176,7 +183,9 @@ if(!ok) return
           <div className="flex gap-4 items-center">
             <select
               value={media.type}
-              onChange={(e) => handleTypeChange(index, e.target.value as "image" | "video")}
+              onChange={(e) =>
+                handleTypeChange(index, e.target.value as "image" | "video")
+              }
               className="select select-bordered w-fit"
             >
               <option value="image">Image</option>
@@ -198,7 +207,8 @@ if(!ok) return
               type="file"
               accept="image/*"
               onChange={(e) => {
-                if (e.target.files?.[0]) handleImageUpload(index, e.target.files[0]);
+                if (e.target.files?.[0])
+                  handleImageUpload(index, e.target.files[0]);
               }}
               className="file-input file-input-bordered w-full"
             />
@@ -227,31 +237,36 @@ if(!ok) return
                   Uploading...
                 </div>
               )}
-              {uploadStatus[index] === "success" && !loadingIndexes.includes(index) && (
-                <FaCheckCircle
-                  className="absolute top-2 right-2 text-green-500 bg-white rounded-full"
-                  size={20}
-                />
-              )}
-              {uploadStatus[index] === "error" && !loadingIndexes.includes(index) && (
-                <span className="absolute inset-0 bg-gray-300/80 font-bold text-red-500 flex gap-2 justify-center items-center">
-                  <CiWarning /> Failed...
-                </span>
-              )}
+              {uploadStatus[index] === "success" &&
+                !loadingIndexes.includes(index) && (
+                  <FaCheckCircle
+                    className="absolute top-2 right-2 text-green-500 bg-white rounded-full"
+                    size={20}
+                  />
+                )}
+              {uploadStatus[index] === "error" &&
+                !loadingIndexes.includes(index) && (
+                  <span className="absolute inset-0 bg-gray-300/80 font-bold text-red-500 flex gap-2 justify-center items-center">
+                    <CiWarning /> Failed...
+                  </span>
+                )}
             </div>
           )}
 
-          {/* Optional: Show video thumbnail preview */}
-          {/* Uncomment if you want video thumbnails shown */}
-          {/* {media.type === "video" && media.thumbnail && (
-            <Image
-              src={media.thumbnail}
-              alt="Video thumbnail"
-              width={300}
-              height={200}
-              className="rounded-lg object-cover"
-            />
-          )} */}
+          {media.type === "video" && media.url && (
+            <div className="aspect-vide">
+              <iframe
+                className="  rounded-md"
+                src={`https://www.youtube.com/embed/${extractYouTubeId(
+                  media.url
+                )}`}
+                title="YouTube Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          )}
         </div>
       ))}
 

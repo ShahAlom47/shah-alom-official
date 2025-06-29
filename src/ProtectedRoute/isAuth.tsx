@@ -16,12 +16,15 @@ export default function isAuth<P>(
     const router = useRouter();
 
     useEffect(() => {
+      if (status === "loading") return; // wait for session
+
       if (status === "unauthenticated") {
         router.replace("/login");
       } else if (
         status === "authenticated" &&
+        session &&
         roles.length > 0 &&
-        !roles.includes(session?.user?.role as UserRole)
+        !roles.includes(session.user.role as UserRole)
       ) {
         router.replace("/unauthorized");
       }
@@ -35,12 +38,13 @@ export default function isAuth<P>(
       );
     }
 
-    // Prevent rendering if unauthorized or not logged in
+    // Show nothing while redirecting (after redirect trigger)
     if (
       status === "unauthenticated" ||
       (status === "authenticated" &&
+        session &&
         roles.length > 0 &&
-        !roles.includes(session?.user?.role as UserRole))
+        !roles.includes(session.user.role as UserRole))
     ) {
       return null;
     }
