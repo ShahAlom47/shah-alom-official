@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import Providers from "@/Providers/RootProvider/Providers";
 import Footer from "@/components/Footer";
 import ConditionalWrapper from "@/components/wrappers/ConditionalWrapper";
+import MainWrapper from "@/components/wrappers/MainWrapper"; // 👈 import here
 
 export const metadata: Metadata = {
   title: "Shah Alom Official",
@@ -12,17 +13,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en" className="dark">
-      <body className="min-h-screen bg-blackLight ">
+      <body className="min-h-screen bg-blackLight">
         <Providers>
-        <ConditionalWrapper hideOn={["dashboard",]}>  <Navbar /></ConditionalWrapper>
-          <main className=" mt-[0%] min-h-screen ">{children}</main>
-            <ConditionalWrapper hideOn={["dashboard","login"]}>  <Footer /></ConditionalWrapper>
-         
+          <ConditionalWrapper hideOn={["dashboard"]}>
+            <Navbar />
+          </ConditionalWrapper>
+          <MainWrapper>{children}</MainWrapper>{" "}
+          <ConditionalWrapper hideOn={["dashboard", "login"]}>
+            <Footer />
+          </ConditionalWrapper>
         </Providers>
       </body>
     </html>

@@ -14,9 +14,9 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full  z-50  duration-500 transition-all  backdrop-blur-sm bg-black/45  ${showShadow?" bg-blackLight  shadow-lg shadow-backdrop":"shadow-none  "}  ${
+      className={`fixed top-0 left-0 w-full  z-50  duration-500 transition-all  backdrop-blur-sm bg-black/80  ${!showShadow?" bg-blackLight  shadow-lg shadow-backdrop":"shadow-none  "}  ${
         showNavbar ? "translate-y-0 " : "-translate-y-[200%]" 
-      }  lg:px-5 md:px-3.5 px-2 py-4  `}
+      }  lg:px-5 md:px-3.5 px-2 py-4   `}
     >
       <div className=" lg:flex md:flex hidden items-center justify-between  ">
         <div className=" flex items-center gap-4 ">
