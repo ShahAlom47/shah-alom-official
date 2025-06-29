@@ -1,5 +1,7 @@
+import { getPortfolioCollection, getUserCollection } from "@/lib/database/db_collections";
 import { v2 as cloudinary } from "cloudinary";
 import { NextRequest, NextResponse } from "next/server";
+import { ObjectId } from "mongodb";
 
 // Cloudinary config
 cloudinary.config({
@@ -9,48 +11,87 @@ cloudinary.config({
 });
 
 export async function POST(req: NextRequest) {
-  try {
-    const { publicId } = await req.json();
+  const portfolioCollection = await getPortfolioCollection();
+  const userCollection = await getUserCollection();
 
-    if (!publicId) {
+  try {
+    const { publicId, dataId, mediaCategory } = await req.json();
+
+    if (!publicId || !mediaCategory || !dataId) {
       return NextResponse.json(
-        { success: false, message: "publicId is required" },
+        { success: false, message: "publicId, mediaCategory, and dataId are required" },
         { status: 400 }
       );
     }
 
-    let result;
+    let dbUpdateResult;
+
+    // ✅ STEP 1: First remove media from database based on mediaCategory
+    if (mediaCategory === "portfolioMedia") {
+      const filter = { _id: new ObjectId(dataId) };
+      const update = {
+        $pull: {
+          media: { publicId }, // Remove image where publicId matches
+        },
+      };
+
+      dbUpdateResult = await portfolioCollection.updateOne(filter, update);
+
+      if (dbUpdateResult.modifiedCount === 0) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Image not found in portfolio media or already removed",
+          },
+          { status: 404 }
+        );
+      }
+    }
+
+    // ☑️ Optional: handle other categories (e.g., userMedia)
+    else if (mediaCategory === "userMedia") {
+        const filter = { _id: new ObjectId(dataId) };
+      const update = {
+        $pull: {
+          media: { publicId }, // Remove image where publicId matches
+        },
+      };
+         dbUpdateResult = await userCollection.updateOne(filter, update);
+
+          // akon  aita kaj nai    just  bujar jonno rakci 
+      
+    }
+
+    // ✅ STEP 2: Delete from Cloudinary only if DB update is successful
     try {
-      result = await cloudinary.uploader.destroy(publicId);
-      console.log("result ",result)
-    } catch (err) {
-      // যদি cloudinary API কল এ কোনো error হয়
+      const cloudinaryResult = await cloudinary.uploader.destroy(publicId);
+
+      if (cloudinaryResult.result !== "ok") {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "Image removed from database but failed to delete from Cloudinary",
+            cloudinaryResult,
+          },
+          { status: 500 }
+        );
+      }
+
+      return NextResponse.json({
+        success: true,
+        message: "Image deleted from both database and Cloudinary",
+        cloudinaryResult,
+      });
+    } catch (cloudError) {
       return NextResponse.json(
         {
           success: false,
-          message: "Failed to delete image due to Cloudinary error",
-          error: err instanceof Error ? err.message : String(err),
+          message: "Image removed from DB, but Cloudinary delete failed",
+          error: cloudError instanceof Error ? cloudError.message : String(cloudError),
         },
         { status: 500 }
       );
     }
-
-    if (result.result !== "ok") {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Failed to delete image",
-          result,
-        },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: "Image deleted successfully",
-      result,
-    });
   } catch (error) {
     return NextResponse.json(
       {

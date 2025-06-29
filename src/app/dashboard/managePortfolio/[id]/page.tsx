@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -8,8 +8,16 @@ import Select from "react-select";
 
 import DashPageTitle from "@/components/DashPageTitle";
 import MediaManager from "@/components/MediaManager";
-import { MediaItem, OptionType, Project, ProjectFormInput } from "@/Interfaces/portfolioInterfaces";
-import { getSinglePortfolio, updatePortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
+import {
+  MediaItem,
+  OptionType,
+  Project,
+  ProjectFormInput,
+} from "@/Interfaces/portfolioInterfaces";
+import {
+  getSinglePortfolio,
+  updatePortfolio,
+} from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
 import { customStyles } from "@/style/formSelectStyle";
 
 const techOptions: OptionType[] = [
@@ -30,8 +38,10 @@ const tagOptions: OptionType[] = [
 const EditPortfolio: React.FC = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
+  const router= useRouter()
 
-  const { register, handleSubmit, setValue, control, reset ,watch} = useForm<ProjectFormInput>();
+  const { register, handleSubmit, setValue, control, reset, watch } =
+    useForm<ProjectFormInput>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,12 +58,13 @@ const EditPortfolio: React.FC = () => {
     fetchData();
   }, [id, reset]);
 
-
   const onSubmit: SubmitHandler<ProjectFormInput> = async (data) => {
-    console.log(data)
+   
     const res = await updatePortfolio(id as string, data as Project);
     if (res?.success) {
       toast.success(res.message || "Portfolio updated successfully");
+      router.push("/dashboard/managePortfolio")
+
     } else {
       toast.error(res.message || "Portfolio update failed");
     }
@@ -69,17 +80,35 @@ const EditPortfolio: React.FC = () => {
       <DashPageTitle>✏️ Edit Portfolio Project</DashPageTitle>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-        <input {...register("title", { required: true })} placeholder="Project Title" className="input w-full" />
-        <input {...register("slug", { required: true })} placeholder="Slug" className="input w-full" />
-        <textarea {...register("description", { required: true })} placeholder="Short Description" className="input min-h-16 col-span-2" />
-        <textarea {...register("content")} placeholder="Long Content" className="input min-h-16 col-span-2" />
+        <input
+          {...register("title", { required: true })}
+          placeholder="Project Title"
+          className="input w-full"
+        />
+        <input
+          {...register("slug", { required: true })}
+          placeholder="Slug"
+          className="input w-full"
+        />
+        <textarea
+          {...register("description", { required: true })}
+          placeholder="Short Description"
+          className="input min-h-20  w-full "
+        />
+        <textarea
+          {...register("content")}
+          placeholder="Long Content"
+          className="input min-h-20  w-full"
+        />
       </div>
 
-    <MediaManager
-  folderName="portfolio"
-  onChange={(media: MediaItem[]) => setValue("media", media)}
-  defaultMedia={watch("media") || []}
-/>
+      <MediaManager
+        folderName="portfolio"
+        onChange={(media: MediaItem[]) => setValue("media", media)}
+        defaultMedia={watch("media") || []}
+        dataId={Array.isArray(id) ? id[0] : id}
+        mediaCategory="portfolioMedia"
+      />
 
       <Controller
         name="techStack"
@@ -114,8 +143,16 @@ const EditPortfolio: React.FC = () => {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input {...register("liveLink", { required: true })} placeholder="Live Site Link" className="input w-full" />
-        <input {...register("repoLink", { required: true })} placeholder="GitHub Repo Link" className="input w-full" />
+        <input
+          {...register("liveLink", { required: true })}
+          placeholder="Live Site Link"
+          className="input w-full"
+        />
+        <input
+          {...register("repoLink", { required: true })}
+          placeholder="GitHub Repo Link"
+          className="input w-full"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-4 w-full ">
@@ -141,7 +178,10 @@ const EditPortfolio: React.FC = () => {
         </div>
       </div>
 
-      <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded"
+      >
         💾 Update Project
       </button>
     </form>

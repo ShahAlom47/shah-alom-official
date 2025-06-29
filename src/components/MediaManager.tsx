@@ -8,6 +8,8 @@ import { CiWarning } from "react-icons/ci";
 import Image from "next/image";
 import { uploadToCloudinary } from "@/utils/cloudinaryUpload";
 import toast from "react-hot-toast";
+import { useConfirm } from "@/hooks/useConfirm";
+import { ObjectId } from "mongodb";
 
 export interface MediaItem {
   type: "image" | "video";
@@ -20,11 +22,13 @@ interface Props {
   onChange: (media: MediaItem[]) => void;
   defaultMedia?: MediaItem[];
   folderName?: string; // Optional folder name for organization
+  dataId?:string| ObjectId|undefined| number
+  mediaCategory?:"portfolioMedia"|"blogMedia"| "projectMedia"  //like portfolioMedia ,blogMedia, userMedia etc
 }
 
 
 
-const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName }) => {
+const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName,dataId,mediaCategory }) => {
   // Ensure every media item has all required fields with default values on initialization
   const [mediaList, setMediaList] = useState<MediaItem[]>(
     defaultMedia.map((item) => ({
@@ -35,8 +39,10 @@ const MediaManager: React.FC<Props> = ({ onChange, defaultMedia = [],folderName 
     }))
   );
 
+
   const [loadingIndexes, setLoadingIndexes] = useState<number[]>([]);
   const [uploadStatus, setUploadStatus] = useState<Record<number, "success" | "error" | null>>({});
+  const{confirm,ConfirmModal}= useConfirm()
 
   // Add new media item with all required properties initialized
   const handleAddMedia = () => {
@@ -118,6 +124,16 @@ const handleImageUpload = async (index: number, file: File) => {
 
 
 const handleRemove = async (index: number) => {
+   const ok = await confirm({
+      title: "Delete ",
+      message: "Are you sure you want to delete this item?",
+      confirmText: "Yes",
+      cancelText: "No",
+    });
+if(!ok) return
+
+
+
   const media = mediaList[index];
 
   if (media.type === "image" && media.publicId) {
@@ -125,7 +141,7 @@ const handleRemove = async (index: number) => {
       const res = await fetch("/api/manageMedia/deleteCloudImage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ publicId: media.publicId }),
+        body: JSON.stringify({ publicId: media.publicId,dataId ,mediaCategory}),
       });
 
       const data = await res.json();
@@ -242,6 +258,8 @@ const handleRemove = async (index: number) => {
       <button type="button" onClick={handleAddMedia} className="primary-hover">
         + Add Media
       </button>
+
+      {ConfirmModal}
     </div>
   );
 };
