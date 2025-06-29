@@ -9,6 +9,11 @@ export default withAuth(
 
     const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
     const publicApiRoutes = ["/api/public-data", "/api/blogs"];
+     const adminApiRoutes = [
+      "/api/portfolio/addPortfolio",
+      "/api/portfolio/deletePortfolio",
+      "/api/portfolio/updatePortfolio",
+    ];
 
     // ✅ Allow public pages & API without auth
     if (
@@ -30,10 +35,15 @@ export default withAuth(
     if (pathname.startsWith("/dashboard/admin") && role === "admin") {
       return NextResponse.next();
     }
+   
+    if (adminApiRoutes.includes(pathname) && role === "admin") {
+      return NextResponse.next();
+    }
 
     // ✅ User-only routes
     if (
-      (pathname.startsWith("/dashboard/user") || pathname.startsWith("/api/user")) &&
+      (pathname.startsWith("/dashboard/user") ||
+        pathname.startsWith("/api/user")) &&
       role === "user"
     ) {
       return NextResponse.next();
@@ -52,7 +62,13 @@ export default withAuth(
       authorized({ token, req }) {
         const path = req.nextUrl.pathname.toLowerCase();
 
-        const publicRoutes = ["/", "/login", "/register", "/about", "/portfolio"];
+        const publicRoutes = [
+          "/",
+          "/login",
+          "/register",
+          "/about",
+          "/portfolio",
+        ];
         const publicApiRoutes = ["/api/public-data", "/api/blogs"];
 
         // ✅ Allow public access without token
