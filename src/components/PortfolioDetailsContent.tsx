@@ -15,38 +15,42 @@ interface Props {
 }
 
 const PortfolioDetailContent = ({ portfolio }: Props) => {
-  console.log(portfolio);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
       {/* Main Content */}
       <div className="lg:col-span-2">
         {/* Media Slider */}
-        <Swiper
-          pagination={{ clickable: true }}
-          modules={[Pagination]}
-          className="w-full h-[600px] rounded overflow-hidden mb-6"
-        >
-          {portfolio.media.map((item, index) => (
-            <SwiperSlide key={index}>
-              {item.type === "image" ? (
-                <div className="relative w-full h-[400px]">
-                  <SafeImage
-                    src={item.url}
-                    alt={`media-${index}`}
-                    fill
-                    className="object-cover"
-                  ></SafeImage>
-                </div>
-              ) : (
-                <SafeVideo
-                  className="w-full h-[400px] bb object-cover rounded"
-                  url={item?.url}
-                ></SafeVideo>
-              )}
-            </SwiperSlide>
-          ))}
-        </Swiper>
+        <div className="w-full h-auto rounded overflow-hidden mb-6">
+          <Swiper
+            pagination={{ clickable: true }}
+            modules={[Pagination]}
+            className="w-full h-full custom-swiper-pagination"
+          >
+            {portfolio.media.map((item, index) => (
+              <SwiperSlide key={index}>
+                {item.type === "image" ? (
+                  <div className="relative w-full aspect-video">
+                    <SafeImage
+                      src={item.url}
+                      alt={`media-${index}`}
+                      fill
+                      className="object-cover rounded"
+                    />
+                  </div>
+                ) : (
+                  <div className="aspect-video">
+                    <SafeVideo
+                      url={item.url}
+                      className="w-full h-full object-cover rounded"
+                    />
+                  </div>
+                )}
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
+        {/* Title + Description */}
         <h1 className="text-3xl font-bold mb-3 text-primaryRed">
           {portfolio.title}
         </h1>
@@ -60,7 +64,7 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
         )}
 
         {/* Links */}
-        <div className="flex gap-4 mt-6">
+        <div className="flex flex-wrap gap-4 mt-6">
           {portfolio.liveLink && (
             <Link
               href={portfolio.liveLink}
@@ -104,7 +108,7 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
           <div>
             <h3 className="text-xl font-semibold text-white mb-2">Tags</h3>
             <div className="flex flex-wrap gap-2">
-              {portfolio?.tags?.map((tag, i) => (
+              {portfolio.tags?.map((tag, i) => (
                 <span
                   key={i}
                   className="px-3 py-1 border border-gray-600 text-gray-400 rounded-full text-sm"

@@ -23,7 +23,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
   }
 
   return (
-    <section className="max-w-7xl mx-auto p-6">
+    <section className="max-w mx-auto p-6 pt-1">
       <PageHeading title="Project Details" />
       <PortfolioDetailContent portfolio={portfolio} />
     </section>
