@@ -9,7 +9,7 @@ const MobileNavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between w-full px-4 py-2 bg-[var(--custom-bg)] text-[var(--custom-title)]">
+    <div className="flex items-center justify-between w-full px-4 py-0 bg-[var(--custom-bg)] text-[var(--custom-title)]">
       <Logo />
       <button
         onClick={() => setIsOpen(true)}

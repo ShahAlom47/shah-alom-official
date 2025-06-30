@@ -1,10 +1,11 @@
+// app/portfolio/[slug]/page.tsx --> ✅ Server Component (no "use client")
+
 import React from "react";
 import { notFound } from "next/navigation";
 import { getSinglePortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
 import { Project } from "@/Interfaces/portfolioInterfaces";
 import PageHeading from "@/components/PageHeading";
-
-
+import PortfolioDetailContent from "@/components/PortfolioDetailsContent";
 
 interface Props {
   params: {
@@ -15,28 +16,16 @@ interface Props {
 export default async function PortfolioDetailPage({ params }: Props) {
   const { slug } = params;
   const response = await getSinglePortfolio(slug);
-  const portfolio = response?.data as Project
+  const portfolio = response?.data as Project;
 
   if (!portfolio) {
     notFound();
   }
 
   return (
-  <div>
-      <PageHeading
-        title="Details"
-        // subtitle="Visit my portfolio and keep your feedback"
-      ></PageHeading>
-      <article className="max-w-3xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-4">{portfolio.title}</h1>
-      <p className="mb-6">{portfolio.description}</p>
-      {portfolio.content && (
-        <section
-          dangerouslySetInnerHTML={{ __html: portfolio.content }}
-          className="prose max-w-none"
-        />
-      )}
-    </article>
-  </div>
+    <section className="max-w-7xl mx-auto p-6">
+      <PageHeading title="Project Details" />
+      <PortfolioDetailContent portfolio={portfolio} />
+    </section>
   );
 }

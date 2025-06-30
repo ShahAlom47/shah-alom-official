@@ -22,13 +22,13 @@ export default async function PortfolioPage({ searchParams }: Props) {
   const totalPages = Math.ceil(total / limit);
 
   return (
-    <section className="max-w-6xl mx-auto p-6">
+    <section className="max-w-6xl mx-auto p-6 ">
      <PageHeading
         title="My Portfolio"
         subtitle="Visit my portfolio and keep your feedback"
       ></PageHeading>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 ">
         {portfolioData.map((portfolio) => (
           <div
             key={String(portfolio._id)}

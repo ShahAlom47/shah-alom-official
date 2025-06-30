@@ -10,17 +10,14 @@ export interface IApiResponse<T = unknown> {
   totalData?: number;
   currentPage?: number;
   totalPages?: number;
-  
 }
-
-
 
 const api = axios.create({
   baseURL: "http://localhost:3000/api",
 });
 
 export const request = async <T>(
-  method: "GET" | "POST" | "PUT" | "PATCH"| "DELETE",
+  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   url: string,
   data?: Record<string, unknown> | FormData,
   isForm?: "formData",
@@ -31,6 +28,16 @@ export const request = async <T>(
       "Content-Type": isForm === "formData" ? "multipart/form-data" : "application/json",
       ...customHeaders,
     };
+
+    // Auto-add timestamps if POST or PUT
+    if (data && !(data instanceof FormData) && (method === "POST" || method === "PUT")) {
+      const now = new Date().toISOString();
+      data = {
+        ...data,
+        updatedAt: now,
+        ...(method === "POST" ? { createdAt: now } : {}),
+      };
+    }
 
     const response = await api({
       method,
@@ -48,11 +55,8 @@ export const request = async <T>(
   }
 };
 
-
-
 // Auth API requests
-export const registerUser = async (data:RegisterUser) => {
-  return request("POST", "/auth/register", { ...data }, );
-}
-
+export const registerUser = async (data: RegisterUser) => {
+  return request("POST", "/auth/register", { ...data });
+};
 

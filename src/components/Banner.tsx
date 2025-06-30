@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const Banner = () => {
   const { width } = useScreenInfo();
-    const [hasMounted, setHasMounted] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -18,26 +18,25 @@ const Banner = () => {
 
   if (!hasMounted) return null; // Prevent SSR mismatch
 
-
   return (
     <div
-      className="py-10  bg-cover bg-center "
+      className="  bg-cover bg-center  "
       style={{
         backgroundImage: `url(${
           isMobileScreen ? bannerMobile.src : banner.src
         })`,
       }}
     >
-<div className="grid gap-3 grid-cols-1 lg:grid-cols-2 w-[90%] mx-auto justify-center items-end lg:items-center min-h-screen ">
-         <div className="p-4 space-y-3 order-2 lg:order-1  ">
-          <h3 className=" uppercase text-grayDeep text-lg font-semibold">
+      <div className="grid gap-3  grid-cols-1 lg:grid-cols-2 w-[90%] mx-auto justify-center items-end lg:items-center  md:min-h-screen  pb-10 ">
+        <div className="p-4 md:space-y-3 space-x-1 order-2 lg:order-1  ">
+          <h3 className=" uppercase text-grayDeep md:text-lg text-sm font-semibold">
             Welcome to my world
           </h3>
-          <h1 className=" text-3xl font-bold text-grayLight">
+          <h1 className=" md:text-3xl text-xl font-bold text-grayLight">
             Hello,I’m <span className=" text-primaryRed">Shah Alom</span>
           </h1>
-          <h1 className="text-2xl font-bold text-grayLight space-x-2">
-            {" "}
+          <h1 className="md:text-2xl text-lg font-bold text-grayLight space-x-2">
+          
             a
             <TypeAnimation
               sequence={[
@@ -55,11 +54,11 @@ const Banner = () => {
             />
           </h1>
 
-          <p className=" text-grayDeep text-sm pt-5">
+          <p className=" text-grayDeep text-sm md:pt-5 pt-2">
             Creative Front-End Developer crafting user-friendly web experiences
             with modern technologies and clean design.
           </p>
-          <h1 className="mt-6 font-semibold text-grayLight text-lg pt-7">
+          <h1 className="mt-5 font-semibold text-grayLight text-lg md:pt-7 pt-3">
             A Journey of
             <TypeAnimation
               sequence={[" Dreams", 2000, " Emotions", 2000]}
@@ -72,7 +71,7 @@ const Banner = () => {
           </h1>
         </div>
 
-       <div className="p-4  order-1 lg:order-2 h-full "></div>
+        <div className="p-4  order-1 lg:order-2 h-full "></div>
       </div>
     </div>
   );

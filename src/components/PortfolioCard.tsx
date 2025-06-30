@@ -14,7 +14,7 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
   const images = portfolio?.media?.filter((item) => item.type === "image") || [];
 
   return (
-    <div className="primary-hover group p-4 transition-all duration-700 ease-in-out">
+    <div className="primary-hover group md:p-7 p-4 rounded-md transition-all duration-700 ease-in-out">
       {/* Image Slider */}
       <div className="relative w-full  rounded overflow-hidden">
         <Swiper
@@ -24,11 +24,14 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
         >
           {images.map((img, index) => (
             <SwiperSlide key={index}>
-              <div className="relative w-full md:h-60 sm:h-52 h-40 rounded-sm">
+              <div className="relative w-full md:h-52 sm:h-40 h-32 rounded-sm">
                 <Image
                   src={img.url}
                   alt={`portfolio-image-${index}`}
                   fill
+                  unoptimized
+                  // width={300}
+                  // height={200}
                   className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
                 />
               </div>
@@ -51,7 +54,7 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
         </Link>
         <Link
           href={`/portfolio/${portfolio._id}`}
-          className="primary-hover px-3 py-1 transition-all duration-500"
+          className="primary-hover px-3 py-0 capitalize transition-all duration-500"
         >
           View Details
         </Link>
