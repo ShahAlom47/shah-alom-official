@@ -1,7 +1,8 @@
 import { getAllPortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
 import { Project } from "@/Interfaces/portfolioInterfaces";
-import Link from "next/link";
 import PublicPagePaginationButton from "@/components/PublicPagePaginationButton";
+import PageHeading from "@/components/PageHeading";
+import PortfolioCard from "@/components/PortfolioCard";
 
 interface Props {
   searchParams: {
@@ -11,7 +12,7 @@ interface Props {
 
 export default async function PortfolioPage({ searchParams }: Props) {
   const currentPage = Number(searchParams.page) || 1;
-  const limit = 1;
+  const limit = 6;
 
   const response = await getAllPortfolio({ currentPage, limit });
 
@@ -22,22 +23,18 @@ export default async function PortfolioPage({ searchParams }: Props) {
 
   return (
     <section className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">My Portfolio</h1>
+     <PageHeading
+        title="My Portfolio"
+        subtitle="Visit my portfolio and keep your feedback"
+      ></PageHeading>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {portfolioData.map((portfolio) => (
           <div
             key={String(portfolio._id)}
-            className="border rounded p-4 shadow hover:shadow-lg transition"
+            className=""
           >
-            <h2 className="text-xl font-semibold">{portfolio.title}</h2>
-            <p className="mt-2">{portfolio.description}</p>
-            <Link
-              href={`/portfolio/${portfolio._id}`}
-              className="text-blue-600 hover:underline mt-4 inline-block"
-            >
-              View Details
-            </Link>
+          <PortfolioCard portfolio={portfolio}></PortfolioCard>
           </div>
         ))}
       </div>

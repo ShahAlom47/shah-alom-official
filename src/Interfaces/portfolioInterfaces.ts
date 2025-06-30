@@ -19,6 +19,7 @@ export interface Project {
     _id?: ObjectId | string; 
   title: string;
   slug: string;
+  react?:string[];
   description: string;
   content?: string;
   media: MediaItem[];

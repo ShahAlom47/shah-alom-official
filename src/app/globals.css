@@ -1,4 +1,8 @@
 /* @import "tailwindcss"; */
+@import "swiper/css";
+@import "swiper/css/pagination";
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -79,26 +83,6 @@
 
 
 
-/*  hover effect  */
-.primary-hover {
-  padding: 0.25rem 1rem; /* py-1 px-4 */
-  border-radius: 0.125rem; /* rounded-sm */
-  font-weight: 500; /* font-medium */
-  text-transform: uppercase;
-
-  background-image: linear-gradient(to top right, #1f1f1f, #3e434a); /* from-blackLight to-gray-700 */
-  background-size: 150% 100%;
-  background-position: left;
-
-  transition: all 0.7s ease-in-out;
-  box-shadow: -1px 2px 8px rgba(216, 216, 216, 0.39); /* shadow-[-1px_2px_2px_#d8d8d863] */
-}
-
-.primary-hover:hover {
-  background-image: linear-gradient(to bottom left, #1f1f1f, #41454c); /* hover:bg-gradient-to-bl */
-  /* transform: translateY(-0.25rem); */
-  box-shadow: 1px -2px 8px rgba(107, 105, 105, 0.39); /* hover:shadow-[1px_-2px_2px_#d8d8d863] */
-}
 
 
 

@@ -2,6 +2,7 @@ import React from "react";
 import { notFound } from "next/navigation";
 import { getSinglePortfolio } from "@/lib/allApiRequest/portfolioRequest/porfolioRequest";
 import { Project } from "@/Interfaces/portfolioInterfaces";
+import PageHeading from "@/components/PageHeading";
 
 
 
@@ -21,7 +22,12 @@ export default async function PortfolioDetailPage({ params }: Props) {
   }
 
   return (
-    <article className="max-w-3xl mx-auto p-6">
+  <div>
+      <PageHeading
+        title="Details"
+        // subtitle="Visit my portfolio and keep your feedback"
+      ></PageHeading>
+      <article className="max-w-3xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-4">{portfolio.title}</h1>
       <p className="mb-6">{portfolio.description}</p>
       {portfolio.content && (
@@ -31,5 +37,6 @@ export default async function PortfolioDetailPage({ params }: Props) {
         />
       )}
     </article>
+  </div>
   );
 }
