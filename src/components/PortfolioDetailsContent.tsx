@@ -6,15 +6,16 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-import Image from "next/image";
 import Link from "next/link";
+import SafeImage from "./SafeImage";
+import SafeVideo from "./SafeVideo";
 
 interface Props {
   portfolio: Project;
 }
 
 const PortfolioDetailContent = ({ portfolio }: Props) => {
-    console.log(portfolio)
+  console.log(portfolio);
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
       {/* Main Content */}
@@ -23,25 +24,24 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
         <Swiper
           pagination={{ clickable: true }}
           modules={[Pagination]}
-          className="w-full h-[400px] rounded overflow-hidden mb-6"
+          className="w-full h-[600px] rounded overflow-hidden mb-6"
         >
           {portfolio.media.map((item, index) => (
             <SwiperSlide key={index}>
               {item.type === "image" ? (
                 <div className="relative w-full h-[400px]">
-                  <Image
+                  <SafeImage
                     src={item.url}
                     alt={`media-${index}`}
                     fill
                     className="object-cover"
-                  />
+                  ></SafeImage>
                 </div>
               ) : (
-                <video
-                  controls
-                  className="w-full h-[400px] object-cover rounded"
-                  src={item.url}
-                />
+                <SafeVideo
+                  className="w-full h-[400px] bb object-cover rounded"
+                  url={item?.url}
+                ></SafeVideo>
               )}
             </SwiperSlide>
           ))}
@@ -85,7 +85,9 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
       {/* Sidebar */}
       <aside className="space-y-6">
         <div>
-          <h3 className="text-xl font-semibold text-white mb-2">Technologies Used</h3>
+          <h3 className="text-xl font-semibold text-white mb-2">
+            Technologies Used
+          </h3>
           <div className="flex flex-wrap gap-2">
             {portfolio.techStack.map((tech, i) => (
               <span
@@ -115,8 +117,12 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
         )}
 
         <div className="text-sm text-gray-500">
-          <p>Created At: {new Date(portfolio.createdAt).toLocaleDateString()}</p>
-          <p>Updated At: {new Date(portfolio.updatedAt).toLocaleDateString()}</p>
+          <p>
+            Created At: {new Date(portfolio.createdAt).toLocaleDateString()}
+          </p>
+          <p>
+            Updated At: {new Date(portfolio.updatedAt).toLocaleDateString()}
+          </p>
         </div>
       </aside>
     </div>

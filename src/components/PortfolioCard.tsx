@@ -1,10 +1,10 @@
 "use client";
 import { Project } from "@/Interfaces/portfolioInterfaces";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
+import SafeImage from "./SafeImage";
 
 type PortfolioDetailsProps = {
   portfolio: Project;
@@ -25,7 +25,8 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
           {images.map((img, index) => (
             <SwiperSlide key={index}>
               <div className="relative w-full md:h-52 sm:h-40 h-32 rounded-sm">
-                <Image
+     
+                <SafeImage
                   src={img.url}
                   alt={`portfolio-image-${index}`}
                   fill
@@ -33,7 +34,7 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
                   // width={300}
                   // height={200}
                   className="object-cover transition-transform duration-700 ease-in-out group-hover:scale-110"
-                />
+                ></SafeImage>
               </div>
             </SwiperSlide>
           ))}
