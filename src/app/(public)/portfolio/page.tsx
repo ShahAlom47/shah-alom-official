@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default async function PortfolioPage({ searchParams }: Props) {
-  const currentPage = Number(searchParams.page) || 1;
+  const currentPage = Number(searchParams?.page) || 1;
   const limit = 6;
 
   const response = await getAllPortfolio({ currentPage, limit });

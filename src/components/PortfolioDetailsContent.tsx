@@ -2,13 +2,11 @@
 
 import React from "react";
 import { Project } from "@/Interfaces/portfolioInterfaces";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import Link from "next/link";
-import SafeImage from "./SafeImage";
-import SafeVideo from "./SafeVideo";
+import MediaGallery from "./MediaGallery ";
+import MoreProjects from "./MoreProject";
 
 interface Props {
   portfolio: Project;
@@ -21,33 +19,7 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
       <div className="lg:col-span-2">
         {/* Media Slider */}
         <div className="w-full h-auto rounded overflow-hidden mb-6">
-          <Swiper
-            pagination={{ clickable: true }}
-            modules={[Pagination]}
-            className="w-full h-full custom-swiper-pagination"
-          >
-            {portfolio.media.map((item, index) => (
-              <SwiperSlide key={index}>
-                {item.type === "image" ? (
-                  <div className="relative w-full aspect-video">
-                    <SafeImage
-                      src={item.url}
-                      alt={`media-${index}`}
-                      fill
-                      className="object-cover rounded"
-                    />
-                  </div>
-                ) : (
-                  <div className="aspect-video">
-                    <SafeVideo
-                      url={item.url}
-                      className="w-full h-full object-cover rounded"
-                    />
-                  </div>
-                )}
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          <MediaGallery media={portfolio?.media || []}></MediaGallery>
         </div>
 
         {/* Title + Description */}
@@ -128,6 +100,7 @@ const PortfolioDetailContent = ({ portfolio }: Props) => {
             Updated At: {new Date(portfolio.updatedAt).toLocaleDateString()}
           </p>
         </div>
+        <MoreProjects></MoreProjects>
       </aside>
     </div>
   );

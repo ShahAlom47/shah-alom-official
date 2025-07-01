@@ -16,7 +16,7 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
   return (
     <div className="primary-hover group md:p-7 p-4 rounded-md transition-all duration-700 ease-in-out">
       {/* Image Slider */}
-      <div className="relative w-full  rounded overflow-hidden">
+      <div className="relative w-full  rounded overflow-hidden ">
         <Swiper
           pagination={{ clickable: true }}
           modules={[Pagination]}
@@ -42,7 +42,7 @@ const PortfolioCard = ({ portfolio }: PortfolioDetailsProps) => {
       </div>
 
       {/* Title and Links */}
-      <h2 className="text-xl font-semibold my-3 capitalize transition-all duration-700 ease-in-out group-hover:text-primaryRed">
+      <h2 className="text-xl font-semibold my-3 mt-5 capitalize transition-all duration-700 ease-in-out group-hover:text-primaryRed">
         {portfolio.title}
       </h2>
       <div className="flex justify-between items-center">
